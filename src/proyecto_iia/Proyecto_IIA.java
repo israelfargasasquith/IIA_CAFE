@@ -14,8 +14,7 @@ public class Proyecto_IIA {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        IMenu Menu = new Menu();
-        
+        IMenu Menu = new Menu();    //MVC
     }
     
 }
