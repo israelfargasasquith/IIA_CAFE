@@ -19,23 +19,23 @@ public class Replicator extends Tarea {
 
     public Replicator(EnumTarea t, ArrayList<Slot> se, ArrayList<Slot> sl) {
         super(t, se, sl);
-        mensaje = getMensajeEntrada(0);
+        
+        //Obtiene el mensaje
+        mensaje = getMensajeEntrada(0);   //indicar qué entrada es
     }
     
     
     
     @Override
     public void procesar() {
-        //Obtiene el mensaje
-        mensaje = super.getMensajeEntrada(0);   //indicar qué entrada es
         
         //Lo coloca en las salidas
-        for (int i = 0; i < super.getNSalidas(); i++) {
+        for (int i = 0; i < getNSalidas(); i++) {
             super.setMensajeSalida(mensaje, i);
         }
     }
     
     public ArrayList<Slot> enviarReplicados(){
-        return super.getslotsSalida();
+        return getslotsSalida();
     }
 }
