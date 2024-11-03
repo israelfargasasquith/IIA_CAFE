@@ -13,7 +13,6 @@ import org.w3c.dom.Document;
  *
  * @author israe
  */
-
 public class Correlator extends Tarea{
 
     public Correlator(EnumTarea t, ArrayList<Slot> se, ArrayList<Slot> sl) {
