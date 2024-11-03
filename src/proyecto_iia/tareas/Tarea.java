@@ -4,6 +4,7 @@
  */
 package proyecto_iia.tareas;
 
+import comun.Mensaje;
 import java.util.ArrayList;
 import org.w3c.dom.Document;
 import comun.Slot;
@@ -17,5 +18,28 @@ abstract public class Tarea {
     private ArrayList<Slot> slotsEntrada;
     private ArrayList<Slot> slotsSalida;
     
-    abstract public Document procesar();
+    abstract public void procesar();
+    
+    public Tarea(EnumTarea t, ArrayList<Slot> se, ArrayList<Slot> sl){
+        tipo = t;
+        slotsEntrada = se;
+        slotsSalida = sl;
+    }
+    
+    public Mensaje getMensajeEntrada(int numE){
+        return slotsEntrada.get(numE).getMensaje();
+    }
+    
+    public void setMensajeSalida(Mensaje msj, int numS){
+        slotsSalida.get(numS).addMensaje(msj);
+        
+    }
+    
+    public int getNSalidas(){
+        return slotsSalida.size();
+    }
+    
+    public ArrayList<Slot> getslotsSalida(){
+        return slotsSalida;
+    }
 }

@@ -4,6 +4,8 @@
  */
 package proyecto_iia.tareas;
 
+import comun.Slot;
+import java.util.ArrayList;
 import org.w3c.dom.Document;
 
 /**
@@ -12,8 +14,12 @@ import org.w3c.dom.Document;
  */
 public class Translator extends Tarea {
 
+    public Translator(EnumTarea t, ArrayList<Slot> se, ArrayList<Slot> sl) {
+        super(t, se, sl);
+    }
+
     @Override
-    public Document procesar() {
+    public void procesar() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
     

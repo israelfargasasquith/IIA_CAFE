@@ -4,6 +4,9 @@
  */
 package proyecto_iia.tareas;
 
+import comun.Mensaje;
+import comun.Slot;
+import java.util.ArrayList;
 import org.w3c.dom.Document;
 
 /**
@@ -12,9 +15,21 @@ import org.w3c.dom.Document;
  */
 public class Distributor extends Tarea {
 
+    private Slot SlotEntrada = new Slot();
+    private Slot[] SlotSalida = new Slot[5];
+    
+    private Mensaje mensaje = new Mensaje();
+
+    public Distributor(EnumTarea t, ArrayList<Slot> se, ArrayList<Slot> sl) {
+        super(t, se, sl);
+    }
+    
     @Override
-    public Document procesar() {
+    public void procesar() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
+    
+    
+    
     
 }

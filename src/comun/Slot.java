@@ -13,4 +13,13 @@ import org.w3c.dom.Document;
  */
 public class Slot {
     private Queue<Mensaje> colaMensajes;
+    
+    
+    public void addMensaje(Mensaje msj){
+        colaMensajes.add(msj);
+    }
+    
+    public Mensaje getMensaje(){
+        return colaMensajes.remove();
+    }
 }
