@@ -19,6 +19,7 @@ public class Correlator extends Tarea{
         super(t, se, sl);
     }
 
+    
     @Override
     public void procesar() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
