@@ -2,19 +2,19 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package comun;
+package externo;
 
-import java.util.Queue;
-import org.w3c.dom.Document;
+import comun.Slot;
 
 /**
  *
  * @author israe
  */
-public class Slot {
-    private Queue<Mensaje> colaMensajes;
+public class PuertoEntrada {
+    private Slot slotEntrada;
     
-    public Document leeSlot(){
-        return colaMensajes.poll().getMensaje();
+    public void generarEntrada(){
+    
     }
+    
 }
