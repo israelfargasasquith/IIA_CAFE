@@ -10,6 +10,10 @@ import javax.swing.JFileChooser;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -35,7 +39,36 @@ public class Proyecto_IIA {
             if (aproved == JFileChooser.APPROVE_OPTION) {
                 File choosed = tmp.getSelectedFile();
                 Document doc = db.parse(choosed);
-                doc.getDocumentElement().normalize();
+                XPath filter = XPathFactory.newInstance().newXPath();
+                String expressionDrinks = "//drink";
+                String expressionOrderId = "//order_id";
+                NodeList order_id = (NodeList) filter.compile(expressionOrderId).evaluate(doc, XPathConstants.NODESET);
+                NodeList nodos = (NodeList) filter.compile(expressionDrinks).evaluate(doc, XPathConstants.NODESET);
+                String id = order_id.item(0).getTextContent();
+                System.out.println("Root Element :" + doc.getDocumentElement().getNodeName());
+                System.out.println("Order id : " + id);
+                System.out.println("------");
+                for (int temp = 0; temp < nodos.getLength(); temp++) {
+
+                    Node node = nodos.item(temp);
+
+                    if (node.getNodeType() == Node.ELEMENT_NODE) {
+
+                        Element element = (Element) node;
+
+                        String name = element.getElementsByTagName("name").item(0).getTextContent();
+                        String type = element.getElementsByTagName("type").item(0).getTextContent();
+
+                        System.out.println("Current Element :" + node.getNodeName());
+                        System.out.println("First Name : " + name);
+                        System.out.println("Last Name : " + type);
+                        System.out.println("------------");
+
+                    }
+                }
+
+                //Retrival information without using XPath, just doing a search into the node tree document
+                /* doc.getDocumentElement().normalize();
 
                 NodeList order_id = doc.getElementsByTagName("order_id");
                 String id = order_id.item(0).getTextContent();
@@ -62,10 +95,10 @@ public class Proyecto_IIA {
                         System.out.println("------------");
 
                     }
-                }
+                }*/
             }
 
-        } catch (ParserConfigurationException | IOException | SAXException ex) {
+        } catch (ParserConfigurationException | IOException | SAXException | XPathExpressionException ex) {
             System.out.println("Error: " + ex.getMessage());
         }
     }
