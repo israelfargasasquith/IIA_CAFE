@@ -10,6 +10,13 @@ import javax.swing.JFileChooser;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
@@ -37,14 +44,25 @@ public class Proyecto_IIA {
             tmp.setCurrentDirectory(new File(System.getProperty("user.dir") + System.getProperty("file.separator") + "src" + System.getProperty("file.separator") + "orders"));
             int aproved = tmp.showDialog(null, JFileChooser.APPROVE_SELECTION);
             if (aproved == JFileChooser.APPROVE_OPTION) {
-                File choosed = tmp.getSelectedFile();
-                Document doc = db.parse(choosed);
+
+                File inputFile = tmp.getSelectedFile();
+                Document doc = db.parse(inputFile);
+
+                Source inputSource = new StreamSource(inputFile);
+                Source xsltSource = new StreamSource(System.getProperty("user.dir") + System.getProperty("file.separator") + "src" + System.getProperty("file.separator") + "orders" + System.getProperty("file.separator") + "XSLT_Temp.xsl");
+                TransformerFactory transformerFactory = TransformerFactory.newInstance();
+                Transformer transformer = transformerFactory.newTransformer(xsltSource);
+                StreamResult result = new StreamResult("output.xml");
+                transformer.transform(inputSource, result);
+                
                 XPath filter = XPathFactory.newInstance().newXPath();
                 String expressionDrinks = "//drink";
                 String expressionOrderId = "//order_id";
+
                 NodeList order_id = (NodeList) filter.compile(expressionOrderId).evaluate(doc, XPathConstants.NODESET);
-                NodeList nodos = (NodeList) filter.compile(expressionDrinks).evaluate(doc, XPathConstants.NODESET);
-                String id = order_id.item(0).getTextContent();
+                // NodeList nodos = (NodeList) filter.compile(expressionDrinks).evaluate(doc, XPathConstants.NODESET);
+
+                /*String id = order_id.item(0).getTextContent();
                 System.out.println("Root Element :" + doc.getDocumentElement().getNodeName());
                 System.out.println("Order id : " + id);
                 System.out.println("------");
@@ -98,7 +116,7 @@ public class Proyecto_IIA {
                 }*/
             }
 
-        } catch (ParserConfigurationException | IOException | SAXException | XPathExpressionException ex) {
+        } catch (ParserConfigurationException | IOException | SAXException | XPathExpressionException |  TransformerException ex) {
             System.out.println("Error: " + ex.getMessage());
         }
     }
