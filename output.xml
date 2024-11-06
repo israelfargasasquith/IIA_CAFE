@@ -2,4 +2,11 @@
     <id>1</id>
     <nombre>cafe</nombre>
     <tipo>hot</tipo>
+    <Is_last>false</Is_last>
+</mensaje>
+<mensaje>
+    <id>1</id>
+    <nombre>coca-cola</nombre>
+    <tipo>cold</tipo>
+    <Is_last>true</Is_last>
 </mensaje>

@@ -15,6 +15,7 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.xpath.XPath;
@@ -33,15 +34,14 @@ import org.xml.sax.SAXException;
  */
 public class Proyecto_IIA {
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         try {
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
+
             JFileChooser tmp = new JFileChooser();
             tmp.setCurrentDirectory(new File(System.getProperty("user.dir") + System.getProperty("file.separator") + "src" + System.getProperty("file.separator") + "orders"));
+
             int aproved = tmp.showDialog(null, JFileChooser.APPROVE_SELECTION);
             if (aproved == JFileChooser.APPROVE_OPTION) {
 
@@ -52,14 +52,50 @@ public class Proyecto_IIA {
                 Source xsltSource = new StreamSource(System.getProperty("user.dir") + System.getProperty("file.separator") + "src" + System.getProperty("file.separator") + "orders" + System.getProperty("file.separator") + "XSLT_Temp.xsl");
                 TransformerFactory transformerFactory = TransformerFactory.newInstance();
                 Transformer transformer = transformerFactory.newTransformer(xsltSource);
+                //DOMResult result = new DOMResult();
+                //with StreamResult we generate a new file
                 StreamResult result = new StreamResult("output.xml");
                 transformer.transform(inputSource, result);
+               /* Document transformedDoc = (Document) result.getNode();
+
+                NodeList order_id = transformedDoc.getElementsByTagName("id");
+                NodeList nodos = doc.getElementsByTagName("drink");
+                String id ="";
                 
+                if (order_id.getLength() > 0 && order_id.item(0) != null) {
+                    id = order_id.item(0).getTextContent();
+                    System.out.println("Order ID: " + id);
+                } else {
+                    System.out.println("Tag <order_id> not found in the document.");
+                }
+
+                System.out.println("Root Element :" + transformedDoc.getDocumentElement().getNodeName());
+                System.out.println("Order id : " + id);
+                System.out.println("------");
+                for (int temp = 0; temp < nodos.getLength(); temp++) {
+
+                    Node node = nodos.item(temp);
+
+                    if (node.getNodeType() == Node.ELEMENT_NODE) {
+
+                        Element element = (Element) node;
+
+                        String name = element.getElementsByTagName("name").item(0).getTextContent();
+                        String type = element.getElementsByTagName("type").item(0).getTextContent();
+
+                        System.out.println("Current Element :" + node.getNodeName());
+                        System.out.println("First Name : " + name);
+                        System.out.println("Last Name : " + type);
+                        System.out.println("------------");
+
+                    }
+                }*/
+
                 XPath filter = XPathFactory.newInstance().newXPath();
                 String expressionDrinks = "//drink";
                 String expressionOrderId = "//order_id";
 
-                NodeList order_id = (NodeList) filter.compile(expressionOrderId).evaluate(doc, XPathConstants.NODESET);
+                // NodeList order_id = (NodeList) filter.compile(expressionOrderId).evaluate(doc, XPathConstants.NODESET);
                 // NodeList nodos = (NodeList) filter.compile(expressionDrinks).evaluate(doc, XPathConstants.NODESET);
 
                 /*String id = order_id.item(0).getTextContent();
@@ -116,7 +152,7 @@ public class Proyecto_IIA {
                 }*/
             }
 
-        } catch (ParserConfigurationException | IOException | SAXException | XPathExpressionException |  TransformerException ex) {
+        } catch (Exception ex) {
             System.out.println("Error: " + ex.getMessage());
         }
     }

@@ -9,23 +9,33 @@
 -->
 
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
-    <xsl:output method="html"/>
+    <xsl:output method="html" indent="yes"/>
 
     <!-- TODO customize transformation rules 
          syntax recommendation http://www.w3.org/TR/xslt 
     -->
     <xsl:template match="/">
-        <mensaje>
-            <id>
-                <xsl:value-of select="//order_id"/>
-            </id>
-            <nombre>
-                <xsl:value-of select="//name"/>
-            </nombre>
-            <tipo>
-                <xsl:value-of select="//type"/>
-            </tipo>
-        </mensaje>  
+        <xsl:for-each select="//drink">
+            <mensaje>
+                <id>
+                    <xsl:value-of select="//order_id"/>
+                </id>
+                <nombre>
+                    <xsl:value-of select="name"/>
+                </nombre>
+                <tipo>
+                    <xsl:value-of select="type"/>
+                </tipo>
+                <Is_last>
+                    <!-- Check if the current drink is the last in the list -->
+                    <xsl:choose>
+                        <xsl:when test="position() = last()">true</xsl:when>
+                        <xsl:otherwise>false</xsl:otherwise>
+                    </xsl:choose>
+                </Is_last>
+            </mensaje>
+            <xsl:text>&#10;</xsl:text>
+        </xsl:for-each>
 
     </xsl:template>
 
