@@ -21,7 +21,7 @@ public class Replicator extends Tarea {
         super(t, se, sl);
         
         //Obtiene el mensaje
-        mensaje = getMensajeEntrada(0);   //indicar qué entrada es
+        mensaje = getMensajeEntrada(0);   //Solo tiene 1 entrada
     }
     
     
@@ -33,9 +33,14 @@ public class Replicator extends Tarea {
         for (int i = 0; i < getNSalidas(); i++) {
             super.setMensajeSalida(mensaje, i);
         }
+        sigMensaje();
     }
     
     public ArrayList<Slot> enviarReplicados(){
         return getslotsSalida();
+    }
+    
+    private void sigMensaje(){
+        mensaje = getMensajeEntrada(0);
     }
 }

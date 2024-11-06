@@ -20,4 +20,5 @@ public class Mensaje {
     public Mensaje(Document msj){
         mensaje = msj;
     }
+        
 }
