@@ -12,18 +12,12 @@ import org.w3c.dom.Document;
  */
 public class Mensaje {
     private Document mensaje;
-    
-    public Mensaje(Document mensaje){
-        this.mensaje = mensaje;
-    }
-
-    public Document getMensaje() {
-        return mensaje;
-    }
-
-    public void setMensaje(Document mensaje) {
-        this.mensaje = mensaje;
+    public Mensaje(){
+        
     }
     
-    
+    public Mensaje(Document msj){
+        mensaje = msj;
+    }
+        
 }
