@@ -20,5 +20,10 @@ public class Mensaje {
     public Mensaje(Document msj){
         mensaje = msj;
     }
+    
+    
+    public Document getDoc(){
+        return mensaje;
+    }
         
 }

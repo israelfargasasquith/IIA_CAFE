@@ -8,6 +8,8 @@ import comun.Mensaje;
 import comun.Slot;
 import java.util.ArrayList;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /**
  *
@@ -31,32 +33,24 @@ public class Distributor extends Tarea {
           Condiciones[i] = Condic[i];
         }  
         NCondiciones = NumCond;
-        
-        //Obtiene el mensaje
-        mensaje = getMensajeEntrada(0);   //Solo tiene 1 entrada
     }
     
     @Override
     public void procesar() {
-        // Lo coloca en las salidas
-        for (int i = 0; i < getNSalidas(); i++) {
-            //if(mensaje.getCond()[i].equals(Condiciones[i])){
-            super.setMensajeSalida(mensaje, i);
-            //}     Envía el mensaje completo, mirar posible fragmentación en el distributor
-        }
-        sigMensaje();
-    }
-    
-    public ArrayList<Slot> enviarReplicados(){
-        return getslotsSalida();
-    }
-    
-    public void setCondiciones(){
+        //Obtiene el mensaje
+        mensaje = getMensajeEntrada(0);   //Solo tiene 1 entrada
+        Element typeElement = (Element) mensaje.getDoc().getElementsByTagName("type").item(0);
         
+        //Comprueba con la condición de cada salida
+        for (int i = 0; i < getNSalidas(); i++) {
+            String typeText = typeElement.getTextContent();
+            
+            //Comprueba si coincide en el mensaje alguna condición
+            for (int j = 0; j < Condiciones.length; j++) {
+                if(typeText.contains(Condiciones[i])){
+                    super.setMensajeSalida(mensaje, i);                
+                }
+            }
+        }
     }
-    
-    private void sigMensaje(){
-        mensaje = getMensajeEntrada(0);
-    }
-    
 }
