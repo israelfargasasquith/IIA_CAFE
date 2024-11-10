@@ -1,12 +1,30 @@
 <mensaje>
-    <id>1</id>
-    <nombre>cafe</nombre>
-    <tipo>hot</tipo>
-    <Is_last>false</Is_last>
+    <header>
+        <nFrag>1</nFrag>
+    </header>
+    <body>
+        <id>3</id>
+        <nombre>te</nombre>
+        <tipo>hot</tipo>
+    </body>
 </mensaje>
 <mensaje>
-    <id>1</id>
-    <nombre>coca-cola</nombre>
-    <tipo>cold</tipo>
-    <Is_last>true</Is_last>
+    <header>
+        <nFrag>2</nFrag>
+    </header>
+    <body>
+        <id>3</id>
+        <nombre>tonica</nombre>
+        <tipo>cold</tipo>
+    </body>
+</mensaje>
+<mensaje>
+    <header>
+        <nFrag>3</nFrag>
+    </header>
+    <body>
+        <id>3</id>
+        <nombre>coca-cola</nombre>
+        <tipo>cold</tipo>
+    </body>
 </mensaje>

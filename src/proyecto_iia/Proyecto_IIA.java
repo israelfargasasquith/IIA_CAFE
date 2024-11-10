@@ -4,8 +4,11 @@
  */
 package proyecto_iia;
 
+import comun.Mensaje;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JFileChooser;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -49,19 +52,48 @@ public class Proyecto_IIA {
                 Document doc = db.parse(inputFile);
 
                 Source inputSource = new StreamSource(inputFile);
-                Source xsltSource = new StreamSource(System.getProperty("user.dir") + System.getProperty("file.separator") + "src" + System.getProperty("file.separator") + "orders" + System.getProperty("file.separator") + "XSLT_Temp.xsl");
+                Source xsltSource = new StreamSource(System.getProperty("user.dir") + System.getProperty("file.separator") + "src" + System.getProperty("file.separator") + "orders" + System.getProperty("file.separator") + "XSLT_Splitter.xsl");
                 TransformerFactory transformerFactory = TransformerFactory.newInstance();
                 Transformer transformer = transformerFactory.newTransformer(xsltSource);
-                //DOMResult result = new DOMResult();
-                //with StreamResult we generate a new file
-                StreamResult result = new StreamResult("output.xml");
-                transformer.transform(inputSource, result);
-               /* Document transformedDoc = (Document) result.getNode();
+                DOMResult result = new DOMResult();
 
+                transformer.setParameter("varSplitter", "drinks");
+                transformer.setParameter("varOriginal_ID", "order_id");
+                transformer.setParameter("varName", "name");
+                transformer.setParameter("varType", "type");
+
+                DOMResult domResult = new DOMResult();
+                transformer.transform(inputSource, domResult);
+                Document transformedDoc = (Document) domResult.getNode();
+
+                NodeList mensajeNodes = transformedDoc.getElementsByTagName("mensaje");
+
+                List<Mensaje> mensajesList = new ArrayList<>();
+                for (int i = 0; i < mensajeNodes.getLength(); i++) {
+                    // Extract each <mensaje> node as a new Document
+                    Node mensajeNode = mensajeNodes.item(i);
+
+                    // Create a new Document to hold just this <mensaje> element
+                    Document mensajeDoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+
+                    // Import mensajeNode into mensajeDoc, so it becomes part of this new Document
+                    Node importedMensaje = mensajeDoc.importNode(mensajeNode, true);
+
+                    // Append the imported <mensaje> as the root element of the new Document
+                    mensajeDoc.appendChild(importedMensaje);
+
+                    // Create a Mensaje object for each <mensaje> Document
+                    Mensaje mensajeObj = new Mensaje(mensajeDoc);
+                    mensajesList.add(mensajeObj);
+                }/*
+
+                //with StreamResult we generate a new file
+                //StreamResult result = new StreamResult("output.xml");
+                
                 NodeList order_id = transformedDoc.getElementsByTagName("id");
                 NodeList nodos = doc.getElementsByTagName("drink");
-                String id ="";
-                
+                String id = "";
+
                 if (order_id.getLength() > 0 && order_id.item(0) != null) {
                     id = order_id.item(0).getTextContent();
                     System.out.println("Order ID: " + id);
@@ -82,6 +114,7 @@ public class Proyecto_IIA {
 
                         String name = element.getElementsByTagName("name").item(0).getTextContent();
                         String type = element.getElementsByTagName("type").item(0).getTextContent();
+                        String fragmen = element.getElementsByTagName("nFrag").item(0).getTextContent();
 
                         System.out.println("Current Element :" + node.getNodeName());
                         System.out.println("First Name : " + name);
@@ -89,16 +122,16 @@ public class Proyecto_IIA {
                         System.out.println("------------");
 
                     }
-                }*/
-
+                }
+                /*
                 XPath filter = XPathFactory.newInstance().newXPath();
                 String expressionDrinks = "//drink";
                 String expressionOrderId = "//order_id";
 
-                // NodeList order_id = (NodeList) filter.compile(expressionOrderId).evaluate(doc, XPathConstants.NODESET);
-                // NodeList nodos = (NodeList) filter.compile(expressionDrinks).evaluate(doc, XPathConstants.NODESET);
+                NodeList order_id = (NodeList) filter.compile(expressionOrderId).evaluate(doc, XPathConstants.NODESET);
+                NodeList nodos = (NodeList) filter.compile(expressionDrinks).evaluate(doc, XPathConstants.NODESET);
 
-                /*String id = order_id.item(0).getTextContent();
+                String id = order_id.item(0).getTextContent();
                 System.out.println("Root Element :" + doc.getDocumentElement().getNodeName());
                 System.out.println("Order id : " + id);
                 System.out.println("------");
@@ -151,7 +184,8 @@ public class Proyecto_IIA {
                     }
                 }*/
             }
-
+        } catch (ParserConfigurationException ex) {
+            System.out.println("Error:" + ex.getMessage());
         } catch (Exception ex) {
             System.out.println("Error: " + ex.getMessage());
         }
