@@ -17,9 +17,6 @@ import org.w3c.dom.NodeList;
  */
 public class Distributor extends Tarea {
 
-    private Slot SlotEntrada = new Slot();
-    private Slot[] SlotSalida = new Slot[5];
-    
     private Mensaje mensaje = new Mensaje();
 
     
