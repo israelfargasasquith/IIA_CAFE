@@ -26,6 +26,10 @@ abstract public class Tarea {
         slotsSalida = sl;
     }
     
+    public boolean isEmpty(int numEntrada){
+        return slotsEntrada.get(numEntrada).isEmpty();
+    }
+    
     public Mensaje getMensajeEntrada(int numE){
         return slotsEntrada.get(numE).getMensaje();
     }

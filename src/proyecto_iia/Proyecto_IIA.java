@@ -5,10 +5,15 @@
 package proyecto_iia;
 
 import comun.Mensaje;
+import comun.Slot;
+import externo.PuertoEntrada;
 import java.io.File;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -19,17 +24,23 @@ import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSSerializer;
 import org.xml.sax.SAXException;
+import proyecto_iia.tareas.EnumTarea;
+import proyecto_iia.tareas.Splitter;
 
 /**
  *
@@ -37,55 +48,41 @@ import org.xml.sax.SAXException;
  */
 public class Proyecto_IIA {
 
-    public static void main(String[] args) {
-        try {
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = dbf.newDocumentBuilder();
+    public static void main(String[] args) throws TransformerConfigurationException, TransformerException {
 
-            JFileChooser tmp = new JFileChooser();
-            tmp.setCurrentDirectory(new File(System.getProperty("user.dir") + System.getProperty("file.separator") + "src" + System.getProperty("file.separator") + "orders"));
+        Slot sEntrada = new Slot();
+        Slot sSalida = new Slot();
+        ArrayList<Slot> arraySlotEntrada = new ArrayList<>();
+        ArrayList<Slot> arraySlotSalida = new ArrayList<>();
+        arraySlotEntrada.add(sEntrada);
+        arraySlotSalida.add(sSalida);
 
-            int aproved = tmp.showDialog(null, JFileChooser.APPROVE_SELECTION);
-            if (aproved == JFileChooser.APPROVE_OPTION) {
+        PuertoEntrada puertoEntrada = new PuertoEntrada(sEntrada);
+        Splitter tareaPrueba = new Splitter(EnumTarea.SPLITTER, arraySlotEntrada, arraySlotSalida);
 
-                File inputFile = tmp.getSelectedFile();
-                Document doc = db.parse(inputFile);
+        puertoEntrada.generarEntrada();
+        tareaPrueba.procesar();
 
-                Source inputSource = new StreamSource(inputFile);
-                Source xsltSource = new StreamSource(System.getProperty("user.dir") + System.getProperty("file.separator") + "src" + System.getProperty("file.separator") + "orders" + System.getProperty("file.separator") + "XSLT_Splitter.xsl");
-                TransformerFactory transformerFactory = TransformerFactory.newInstance();
-                Transformer transformer = transformerFactory.newTransformer(xsltSource);
-                DOMResult result = new DOMResult();
+        while (!arraySlotSalida.get(0).isEmpty()) {
+            System.out.println(arraySlotSalida.get(0).getMensaje().toString());
 
-                transformer.setParameter("varSplitter", "drinks");
-                transformer.setParameter("varOriginal_ID", "order_id");
-                transformer.setParameter("varName", "name");
-                transformer.setParameter("varType", "type");
+        }
 
-                DOMResult domResult = new DOMResult();
-                transformer.transform(inputSource, domResult);
-                Document transformedDoc = (Document) domResult.getNode();
+    }
+}
 
-                NodeList mensajeNodes = transformedDoc.getElementsByTagName("mensaje");
+/* PRUEBAS PARA CREAR UN FICHERO EXTERNO COMO SALIDA DE DATOS DE LA APLICACION TAMBIEN EJEMPLOS DE COMO EXTRAER DATOS DEL ARBOL DE NODOS 
+DEL XML
 
-                List<Mensaje> mensajesList = new ArrayList<>();
-                for (int i = 0; i < mensajeNodes.getLength(); i++) {
-                    // Extract each <mensaje> node as a new Document
-                    Node mensajeNode = mensajeNodes.item(i);
+Esto para guardarlo en un fichero externo->
+                    //At the end, we save the file XML on disk
+                    //TransformerFactory transformerFactory = TransformerFactory.newInstance();
+                    //Transformer transformer = transformerFactory.newTransformer();
+                    //transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+                    //DOMSource source = new DOMSource(suppXml);
+                    //StreamResult result = new StreamResult(new File("resources/" + supplier.trim() + ".xml"));
+                    //transformer.transform(source, result);
 
-                    // Create a new Document to hold just this <mensaje> element
-                    Document mensajeDoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-
-                    // Import mensajeNode into mensajeDoc, so it becomes part of this new Document
-                    Node importedMensaje = mensajeDoc.importNode(mensajeNode, true);
-
-                    // Append the imported <mensaje> as the root element of the new Document
-                    mensajeDoc.appendChild(importedMensaje);
-
-                    // Create a Mensaje object for each <mensaje> Document
-                    Mensaje mensajeObj = new Mensaje(mensajeDoc);
-                    mensajesList.add(mensajeObj);
-                }/*
 
                 //with StreamResult we generate a new file
                 //StreamResult result = new StreamResult("output.xml");
@@ -183,12 +180,3 @@ public class Proyecto_IIA {
 
                     }
                 }*/
-            }
-        } catch (ParserConfigurationException ex) {
-            System.out.println("Error:" + ex.getMessage());
-        } catch (Exception ex) {
-            System.out.println("Error: " + ex.getMessage());
-        }
-    }
-
-}

@@ -21,27 +21,39 @@ import org.xml.sax.SAXException;
  */
 public class PuertoEntrada {
 
-    private Slot slotEntrada;
+    private Slot slotSalida;
 
-    public PuertoEntrada(Slot slotEntrada) {
-        this.slotEntrada = slotEntrada;
+    public PuertoEntrada(Slot slotSalida) {
+        this.slotSalida = slotSalida;
     }
 
-    public void generarEntrada() throws ParserConfigurationException, SAXException, IOException {
+    public void generarEntrada() {
 
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        DocumentBuilder db = dbf.newDocumentBuilder();
+        try {
 
-        JFileChooser tmp = new JFileChooser();
-        tmp.setCurrentDirectory(new File(System.getProperty("user.dir") + System.getProperty("file.separator") + "src" + System.getProperty("file.separator") + "orders"));
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 
-        int aproved = tmp.showDialog(null, JFileChooser.APPROVE_SELECTION);
-        if (aproved == JFileChooser.APPROVE_OPTION) {
-            File inputFile = tmp.getSelectedFile();
-            Document doc = db.parse(inputFile);
-            slotEntrada.addMensaje(new Mensaje(doc));
-        }else{
-            //Introducir por teclado? Solicitar que elija alguno? Dialogo de salida?
+            JFileChooser tmp = new JFileChooser();
+            tmp.setCurrentDirectory(new File(System.getProperty("user.dir") + System.getProperty("file.separator") + "src" + System.getProperty("file.separator") + "orders"));
+
+            int aproved = tmp.showDialog(null, JFileChooser.APPROVE_SELECTION);
+            if (aproved == JFileChooser.APPROVE_OPTION) {
+                File inputFile = tmp.getSelectedFile();
+                Document doc = dBuilder.parse(inputFile);
+                slotSalida.addMensaje(new Mensaje(doc));
+            } else {
+                //Introducir por teclado? Solicitar que elija alguno? Dialogo de salida?
+            }
+        } catch (ParserConfigurationException ex) {
+            System.out.println("Error de parsing:" + ex.getMessage());
+            System.exit(1);
+        } catch (IOException ex) {
+            System.out.println("Error de IO: " + ex.getMessage());
+            System.exit(2);
+        } catch (SAXException ex) {
+            System.out.println("Error de sax: " + ex.getMessage());
+            System.exit(3);
         }
     }
 

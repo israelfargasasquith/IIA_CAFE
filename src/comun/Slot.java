@@ -4,6 +4,7 @@
  */
 package comun;
 
+import java.util.LinkedList;
 import java.util.Queue;
 import org.w3c.dom.Document;
 
@@ -14,6 +15,9 @@ import org.w3c.dom.Document;
 public class Slot {
     private Queue<Mensaje> colaMensajes;
     
+    public Slot(){
+        colaMensajes = new LinkedList<Mensaje>();
+    }
     
     public void addMensaje(Mensaje msj){
         colaMensajes.add(msj);
@@ -21,5 +25,13 @@ public class Slot {
     
     public Mensaje getMensaje(){
         return colaMensajes.remove();
+    }
+    
+    public boolean isEmpty(){
+        return colaMensajes.isEmpty();
+    }
+    
+    public int nMensajes(){
+        return colaMensajes.size();
     }
 }
