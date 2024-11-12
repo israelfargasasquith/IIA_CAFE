@@ -13,6 +13,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
@@ -23,7 +24,6 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
-import proyecto_iia.tareas.Tarea;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -36,11 +36,16 @@ import org.xml.sax.SAXException;
  */
 public class Splitter extends Tarea {
 
-    String expresionSeparar;
-    String expresionID;
-    String expresionName;
-    String expresionType;
-    Mensaje mensajeAProcesar;
+    private String expresionSeparar;
+    private String expresionID;
+    private String expresionName;
+    private String expresionType;
+    private Mensaje mensajeAProcesar;
+    private DocumentBuilderFactory dbFactory;
+    private DocumentBuilder dBuilder;
+    private Source xsltSource;
+    private TransformerFactory transformerFactory;
+    private Transformer transformer;
 
     public Splitter(EnumTarea t, ArrayList<Slot> se, ArrayList<Slot> sl) {
         super(t, se, sl);
@@ -48,6 +53,29 @@ public class Splitter extends Tarea {
         this.expresionID = "";
         this.expresionName = "";
         this.expresionType = "";
+        dbFactory = DocumentBuilderFactory.newInstance();
+        try {
+            dBuilder = dbFactory.newDocumentBuilder();
+            xsltSource = new StreamSource(System.getProperty("user.dir") + System.getProperty("file.separator") + "src" + System.getProperty("file.separator") + "orders" + System.getProperty("file.separator") + "XSLT_Splitter.xsl");
+        } catch (ParserConfigurationException ex) {
+            System.out.println("Error parsing splitter constructor: " + ex.getMessage());
+            ex.printStackTrace();
+            System.exit(-1);
+        } catch (Exception ex) {
+            System.out.println("Error source not found, splitter constructor: " + ex.getMessage());
+            ex.printStackTrace();
+            System.exit(-1);
+        }
+
+        transformerFactory = TransformerFactory.newInstance();
+        try {
+            transformer = transformerFactory.newTransformer(xsltSource);
+        } catch (TransformerConfigurationException ex) {
+            System.out.println("Error creating transformer, splitter constructor: " + ex.getMessage());
+            ex.printStackTrace();
+            System.exit(-1);
+        }
+
     }
 
     @Override
@@ -56,14 +84,9 @@ public class Splitter extends Tarea {
             mensajeAProcesar = this.getMensajeEntrada(0);
 
             try {
-                DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-                DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 
                 DOMResult domResult = new DOMResult();
                 DOMSource input = new DOMSource(mensajeAProcesar.getDocument());
-                Source xsltSource = new StreamSource(System.getProperty("user.dir") + System.getProperty("file.separator") + "src" + System.getProperty("file.separator") + "orders" + System.getProperty("file.separator") + "XSLT_Splitter.xsl");
-                TransformerFactory transformerFactory = TransformerFactory.newInstance();
-                Transformer transformer = transformerFactory.newTransformer(xsltSource);
 
                 transformer.setParameter("varSplitter", "drinks");
                 transformer.setParameter("varOriginal_ID", "order_id");
@@ -101,7 +124,7 @@ public class Splitter extends Tarea {
                     //System.out.println("añadimos un mensaje al array salida");
                     this.setMensajeSalida(new Mensaje(suppXml), 0);
                 }
-                
+
             } catch (TransformerException ex) {
                 System.out.println("Error de Transformer" + ex.getMessage());
                 System.exit(4);
