@@ -8,6 +8,7 @@ import java.io.StringWriter;
 import java.util.UUID;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
@@ -51,13 +52,14 @@ public class Mensaje {
         this.mensaje = mensaje;
     }
 
-    @Override //no funciona pero si lo hago en el main si... extraño
+    @Override
     public String toString() {
 
         try {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             StringWriter stringWriter = new StringWriter();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.transform(new DOMSource(this.mensaje), new StreamResult(stringWriter));
             String result = stringWriter.toString();
             return result;

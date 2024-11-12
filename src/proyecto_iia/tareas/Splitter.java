@@ -78,7 +78,7 @@ public class Splitter extends Tarea {
                 XPathExpression mensajesExpression = xpath.compile("count(mensajes/mensaje)");
                 Double nMensajesd = (Double) mensajesExpression.evaluate(transformedDoc, XPathConstants.NUMBER);
                 int nMensajes = nMensajesd.intValue();
-                System.out.println("valor de numeroDeMensajes:" + nMensajes);
+                //System.out.println("valor de numeroDeMensajes:" + nMensajes);
 
                 //Now we create the split XMLs
                 for (int i = 0; i < nMensajes; i++) {
@@ -98,7 +98,7 @@ public class Splitter extends Tarea {
 
                         root.appendChild(clonedNode);  // Append to the new document's root
                     }
-                    System.out.println("añadimos un mensaje al array salida");
+                    //System.out.println("añadimos un mensaje al array salida");
                     this.setMensajeSalida(new Mensaje(suppXml), 0);
                 }
                 
