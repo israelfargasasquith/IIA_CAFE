@@ -4,41 +4,12 @@
  */
 package proyecto_iia;
 
-import comun.Mensaje;
 import comun.Slot;
 import externo.PuertoEntrada;
-import java.io.File;
-import java.io.IOException;
-import java.io.StringWriter;
+import externo.PuertoSalida;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JFileChooser;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMResult;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.w3c.dom.ls.DOMImplementationLS;
-import org.w3c.dom.ls.LSSerializer;
-import org.xml.sax.SAXException;
 import proyecto_iia.tareas.EnumTarea;
 import proyecto_iia.tareas.Splitter;
 
@@ -59,14 +30,16 @@ public class Proyecto_IIA {
 
         PuertoEntrada puertoEntrada = new PuertoEntrada(sEntrada);
         Splitter tareaPrueba = new Splitter(EnumTarea.SPLITTER, arraySlotEntrada, arraySlotSalida);
-
+        PuertoSalida puertoSalida = new PuertoSalida(sSalida);
         puertoEntrada.generarEntrada();
         tareaPrueba.procesar();
-
-        while (!arraySlotSalida.get(0).isEmpty()) {
+        puertoSalida.generarSalida();
+        
+        
+        /*while (!arraySlotSalida.get(0).isEmpty()) {
             System.out.println(arraySlotSalida.get(0).getMensaje().toString());
 
-        }
+        }*/
 
     }
 }
