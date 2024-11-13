@@ -1,13 +1,34 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<mensajes>
-    <mensaje>
-        <header>
-            <nFrag>1</nFrag>
-        </header>
-        <body>
-            <id>1</id>
-            <nombre>cafe</nombre>
-            <tipo>hot</tipo>
-        </body>
-    </mensaje>
-</mensajes>
+<cafe_order>
+        
+    <order_id>7</order_id>
+        
+    <drinks>
+                
+        <drink>
+                        
+            <name>cafe</name>
+                        
+            <type>hot</type>
+                    
+        </drink>
+                
+        <drink>
+                        
+            <name>te</name>
+                        
+            <type>hot</type>
+                    
+        </drink>
+                
+        <drink>
+                        
+            <name>tila</name>
+                        
+            <type>hot</type>
+                    
+        </drink>
+            
+    </drinks>
+    
+</cafe_order>

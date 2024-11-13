@@ -17,7 +17,7 @@ import org.w3c.dom.NodeList;
  */
 public class Distributor extends Tarea {
 
-    private Mensaje mensaje;
+     private Mensaje mensaje;
 
     
     private String[] Condiciones;
@@ -25,7 +25,7 @@ public class Distributor extends Tarea {
     
     public Distributor(EnumTarea t, ArrayList<Slot> se, ArrayList<Slot> sl, String[] Condic, int NumCond) {
         super(t, se, sl);
-        
+        Condiciones = new String[NumCond];
         for(int i = 0; i<NumCond; i++){
           Condiciones[i] = Condic[i];
         }  
@@ -43,11 +43,11 @@ public class Distributor extends Tarea {
             String typeText = typeElement.getTextContent();
             
             //Comprueba si coincide en el mensaje alguna condición
-            for (int j = 0; j < Condiciones.length; j++) {
+//            for (int j = 0; j < Condiciones.length; j++) {
                 if(typeText.contains(Condiciones[i])){
                     super.setMensajeSalida(mensaje, i);                
                 }
-            }
+//            }
         }
     }
 }

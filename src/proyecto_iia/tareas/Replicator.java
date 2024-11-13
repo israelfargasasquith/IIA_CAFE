@@ -17,28 +17,18 @@ public class Replicator extends Tarea {
 
     private Mensaje mensaje;
 
-    public Replicator(EnumTarea t, ArrayList<Slot> se, ArrayList<Slot> sl) {
+    public Replicator(EnumTarea t, ArrayList<Slot> se, ArrayList<Slot> sl /*, int n*/) {
         super(t, se, sl);
-
-        mensaje = getMensajeEntrada(0);   //Solo tiene 1 entrada
     }
 
     @Override
     public void procesar() {
 
+        mensaje = this.getMensajeEntrada(0);   //Solo tiene 1 entrada
         //Lo coloca en las salidas
-        for (int i = 0; i < getNSalidas(); i++) {
-            super.setMensajeSalida(mensaje, i);
+        for (int i = 0; i < this.getNSalidas(); i++) {
+            this.setMensajeSalida(new Mensaje(mensaje.getDocument()), i);
         }
-        sigMensaje();
-    }
-
-    public ArrayList<Slot> enviarReplicados() {
-        return getslotsSalida();
-    }
-
-    private void sigMensaje() {
-        mensaje = getMensajeEntrada(0);
     }
 
 }

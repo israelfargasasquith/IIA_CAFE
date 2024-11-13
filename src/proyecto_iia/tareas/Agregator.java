@@ -6,20 +6,19 @@ package proyecto_iia.tareas;
 
 import comun.Slot;
 import java.util.ArrayList;
-import org.w3c.dom.Document;
 
 /**
  *
  * @author israe
  */
-public class Merger extends Tarea {
+public class Agregator extends Tarea {
 
-    public Merger(EnumTarea t, ArrayList<Slot> se, ArrayList<Slot> sl) {
+    public Agregator(EnumTarea t, ArrayList<Slot> se, ArrayList<Slot> sl) {
         super(t, se, sl);
     }
 
     @Override
     public void procesar() {
     }
-    
+
 }

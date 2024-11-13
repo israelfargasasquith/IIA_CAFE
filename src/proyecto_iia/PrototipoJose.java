@@ -1,6 +1,6 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package proyecto_iia;
 
@@ -8,22 +8,18 @@ import comun.Slot;
 import externo.PuertoEntrada;
 import externo.PuertoSalida;
 import java.util.ArrayList;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
+import proyecto_iia.tareas.Distributor;
 import proyecto_iia.tareas.EnumTarea;
-import proyecto_iia.tareas.Splitter;
 
 /**
  *
- * @author Usuario
+ * @author israe
  */
-public class Proyecto_IIA {
+public class PrototipoJose {
 
-    public static void main(String[] args) throws TransformerConfigurationException, TransformerException {
-
-        
+    public static void main(String[] args) {
         //BORRAR LOS GENERATED OUTPUT ANTES DE HACER ALGUNA EJECUCION, ASI VEMOS QUE SE GENERAN NUEVOS
-        System.out.println("Isra's main");
+        System.out.println("Jose's main");
         Slot sEntrada = new Slot();
         Slot sSalida = new Slot();
         ArrayList<Slot> arraySlotEntrada = new ArrayList<>();
@@ -32,16 +28,20 @@ public class Proyecto_IIA {
         arraySlotSalida.add(sSalida);
 
         PuertoEntrada puertoEntrada = new PuertoEntrada(sEntrada);
-        Splitter tareaPrueba = new Splitter(EnumTarea.SPLITTER, arraySlotEntrada, arraySlotSalida);
+
+        //Bucle para probar con varias salidas
+        for (int i = 0; i < 1; i++) {
+            arraySlotSalida.add(sSalida);
+        }
+//        Replicator tareaPrueba = new Replicator(EnumTarea.REPLICATOR, arraySlotEntrada, arraySlotSalida);
+
+        String[] Condiciones = {"cold", "hot"};
+        Distributor tareaPrueba = new Distributor(EnumTarea.DISTRIBUTOR, arraySlotEntrada, arraySlotSalida, Condiciones, 2);
+
         PuertoSalida puertoSalida = new PuertoSalida(sSalida);
         puertoEntrada.generarEntrada();
         tareaPrueba.procesar();
         puertoSalida.generarSalida();
 
-        /* Para ver la salida de la tarea sin generar fichero, hay que quitar puertoSalida.generarSalida()
-        while (!arraySlotSalida.get(0).isEmpty()) {
-            System.out.println(arraySlotSalida.get(0).getMensaje().toString());
-
-        }*/
     }
 }

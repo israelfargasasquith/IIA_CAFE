@@ -14,36 +14,44 @@ import comun.Slot;
  * @author israe
  */
 abstract public class Tarea {
+
     private EnumTarea tipo;
     private ArrayList<Slot> slotsEntrada;
     private ArrayList<Slot> slotsSalida;
-    
+
     abstract public void procesar();
-    
-    public Tarea(EnumTarea t, ArrayList<Slot> se, ArrayList<Slot> sl){
+
+    public Tarea(EnumTarea t, ArrayList<Slot> se, ArrayList<Slot> sl) {
         tipo = t;
         slotsEntrada = se;
         slotsSalida = sl;
     }
-    
-    public boolean isEmpty(int numEntrada){
+
+    public boolean isEmpty(int numEntrada) {
         return slotsEntrada.get(numEntrada).isEmpty();
     }
-    
-    public Mensaje getMensajeEntrada(int numE){
+
+    public Mensaje getMensajeEntrada(int numE) {
         return slotsEntrada.get(numE).getMensaje();
     }
-    
-    public void setMensajeSalida(Mensaje msj, int numS){
+
+    public void setMensajeSalida(Mensaje msj, int numS) {
         slotsSalida.get(numS).addMensaje(msj);
-        
+
     }
-    
-    public int getNSalidas(){
+
+    public int getNSalidas() {
         return slotsSalida.size();
     }
-    
-    public ArrayList<Slot> getslotsSalida(){
+
+    public ArrayList<Slot> getslotsSalida() {
         return slotsSalida;
     }
+    //Ampliar el numero de slots de salida
+//    public void setNSalidas(int n){
+//        for (int i = 0; i < n; i++) {
+//            slotsSalida.add(new Slot());
+//        }
+//    }
+
 }
