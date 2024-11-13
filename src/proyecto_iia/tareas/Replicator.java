@@ -14,33 +14,31 @@ import org.w3c.dom.Document;
  * @author israe
  */
 public class Replicator extends Tarea {
-    
-    private Mensaje mensaje = new Mensaje();
+
+    private Mensaje mensaje;
 
     public Replicator(EnumTarea t, ArrayList<Slot> se, ArrayList<Slot> sl) {
         super(t, se, sl);
-        
-        //Obtiene el mensaje
+
         mensaje = getMensajeEntrada(0);   //Solo tiene 1 entrada
     }
-    
-    
-    
+
     @Override
     public void procesar() {
-        
+
         //Lo coloca en las salidas
         for (int i = 0; i < getNSalidas(); i++) {
             super.setMensajeSalida(mensaje, i);
         }
         sigMensaje();
     }
-    
-    public ArrayList<Slot> enviarReplicados(){
+
+    public ArrayList<Slot> enviarReplicados() {
         return getslotsSalida();
     }
-    
-    private void sigMensaje(){
+
+    private void sigMensaje() {
         mensaje = getMensajeEntrada(0);
     }
+
 }
