@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<mensajes>
+    <mensaje>
+        <header>
+            <nFrag>1</nFrag>
+        </header>
+        <body>
+            <id>1</id>
+            <nombre>cafe</nombre>
+            <tipo>hot</tipo>
+        </body>
+    </mensaje>
+</mensajes>
