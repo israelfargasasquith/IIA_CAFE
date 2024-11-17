@@ -29,7 +29,7 @@ public class PrototipoAgregator {
     public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
 
         //BORRAR LOS GENERATED OUTPUT ANTES DE HACER ALGUNA EJECUCION, ASI VEMOS QUE SE GENERAN NUEVOS
-        System.out.println("Isra's main");
+        System.out.println("Isra's agregator main");
         Slot sEntrada = new Slot();
         Slot sSalida = new Slot();
         ArrayList<Slot> arraySlotEntrada = new ArrayList<>();

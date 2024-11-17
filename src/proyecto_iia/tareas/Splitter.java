@@ -41,6 +41,11 @@ public class Splitter extends Tarea {
     private Source xsltSource;
     private TransformerFactory transformerFactory;
     private Transformer transformer;
+    private XPathFactory xfactory;
+    private XPath xpath;
+    private String expresionXPathContarMensajes;
+    private String rootName;
+    private String xPathQuery;
 
     public Splitter(EnumTarea t, ArrayList<Slot> se, ArrayList<Slot> sl) {
         super(t, se, sl);
@@ -59,6 +64,31 @@ public class Splitter extends Tarea {
             System.out.println("Error creating transformer, splitter constructor: " + ex.getMessage());
         }
 
+        xfactory = XPathFactory.newInstance();
+        xpath = xfactory.newXPath();
+
+        //especificas de Cafe
+        expresionXPathContarMensajes = "count(cafe_order/cafe_subOrder)";
+        rootName = "cafe_subOrder";
+        xPathQuery = "/cafe_order/cafe_subOrder";
+    }
+
+    public void setExpresionXPath(String expresion) {
+        this.expresionXPathContarMensajes = expresion;
+    }
+
+    public void setXSLT(StreamSource nuevoXSLT) throws TransformerConfigurationException {
+        this.xsltSource = nuevoXSLT;
+        this.transformer = transformerFactory.newTransformer(this.xsltSource);
+
+    }
+
+    public void setRootName(String nuevo) {
+        this.rootName = nuevo;
+    }
+
+    public void setXPathQuery(String nuevo) {
+        this.xPathQuery = nuevo;
     }
 
     @Override
@@ -66,52 +96,67 @@ public class Splitter extends Tarea {
         while (!this.isEmpty(0)) {
             mensajeAProcesar = this.getMensajeEntrada(0);
 
+            DOMResult domResult = new DOMResult();
+            DOMSource input = new DOMSource(mensajeAProcesar.getDocument());
+
             try {
-
-                DOMResult domResult = new DOMResult();
-                DOMSource input = new DOMSource(mensajeAProcesar.getDocument());
-
                 transformer.transform(input, domResult);
-                Document transformedDoc = (Document) domResult.getNode();
+            } catch (TransformerException ex) {
+                System.out.println("Error transformer splitter: " + ex.getMessage());
+                return;
+            }
+            Document transformedDoc = (Document) domResult.getNode();
 
-                XPathFactory xfactory = XPathFactory.newInstance();
-                XPath xpath = xfactory.newXPath();
-                XPathExpression mensajesExpression = xpath.compile("count(cafe_order/cafe_subOrder)");
-                Double nMensajesd = (Double) mensajesExpression.evaluate(transformedDoc, XPathConstants.NUMBER);
-                int nMensajes = nMensajesd.intValue();
-                String nuevoID = UUID.randomUUID().toString();
+            XPathExpression mensajesExpression;
+            try {
+                mensajesExpression = xpath.compile(expresionXPathContarMensajes);
+            } catch (XPathExpressionException ex) {
+                System.out.println("Error xpath.comile splitter: " + ex.getMessage());
+                return;
+            }
 
-                for (int i = 0; i < nMensajes; i++) {
+            Double nMensajesd;
+            try {
+                nMensajesd = (Double) mensajesExpression.evaluate(transformedDoc, XPathConstants.NUMBER);
+            } catch (XPathExpressionException ex) {
+                System.out.println("Error xpathEvaluation splitter: " + ex.getMessage());
+                return;
 
-                    Document suppXml = dBuilder.newDocument();
-                    Element root = suppXml.createElement("cafe_subOrder");
-                    suppXml.appendChild(root);
+            }
+            int nMensajes = nMensajesd.intValue();
+            String nuevoID = UUID.randomUUID().toString();
 
-                    String xpathQuery = "/cafe_order/cafe_subOrder";
-                    XPathExpression query = xpath.compile(xpathQuery);
-                    NodeList productNodesFiltered = (NodeList) query.evaluate(transformedDoc, XPathConstants.NODESET);
+            for (int i = 0; i < nMensajes; i++) {
 
-                    if (i < productNodesFiltered.getLength()) {
-                        Node productNode = productNodesFiltered.item(i);
-                        Node clonedNode = suppXml.importNode(productNode, true);
+                Document suppXml = dBuilder.newDocument();
+                Element root = suppXml.createElement(rootName);
+                suppXml.appendChild(root);
 
-                        root.appendChild(clonedNode);
-                    }
-                    Mensaje nuevo = new Mensaje(suppXml, i, nMensajes);
-                    nuevo.setIdMsg(nuevoID);
-
-                    this.setMensajeSalida(nuevo, 0);
+                XPathExpression query;
+                try {
+                    query = xpath.compile(xPathQuery);
+                } catch (XPathExpressionException ex) {
+                    System.out.println("Error xPath.compile 2 splitter: " + ex.getMessage());
+                    return;
+                }
+                NodeList productNodesFiltered;
+                try {
+                    productNodesFiltered = (NodeList) query.evaluate(transformedDoc, XPathConstants.NODESET);
+                } catch (XPathExpressionException ex) {
+                    System.out.println("Error query evaluate 2 splitter: " + ex.getMessage());
+                    return;
                 }
 
-            } catch (TransformerException ex) {
-                System.out.println("Error de Transformer" + ex.getMessage());
-                System.exit(4);
-            } catch (XPathExpressionException ex) {
-                System.out.println("Error de XPath" + ex.getMessage());
-                System.exit(5);
-            } catch (Exception ex) {
-                System.out.println("Error inexperado en main: " + ex.getMessage());
-                System.exit(6);
+                if (i < productNodesFiltered.getLength()) {
+                    Node productNode = productNodesFiltered.item(i);
+                    Node clonedNode = suppXml.importNode(productNode, true);
+
+                    root.appendChild(clonedNode);
+                }
+                Mensaje nuevo = new Mensaje(suppXml, i, nMensajes);
+                nuevo.setIdMsg(nuevoID);
+
+                this.setMensajeSalida(nuevo, 0);
             }
 
         }

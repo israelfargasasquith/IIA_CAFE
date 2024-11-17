@@ -15,5 +15,6 @@ public enum EnumTarea {
     REPLICATOR,
     MERGER,
     CORRELATOR,
-    AGREGATOR
+    AGREGATOR,
+    TRANSLATOR
 }
