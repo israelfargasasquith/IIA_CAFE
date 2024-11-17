@@ -41,7 +41,9 @@ public class PuertoEntrada {
             if (aproved == JFileChooser.APPROVE_OPTION) {
                 File inputFile = tmp.getSelectedFile();
                 Document doc = dBuilder.parse(inputFile);
-                slotSalida.addMensaje(new Mensaje(doc));
+                Mensaje nuevo = new Mensaje(doc);
+                System.out.println("Mensaje creado por el puerto de entrada con id: "+nuevo.getIdMsg());
+                slotSalida.addMensaje(nuevo);
             } else {
                 //Introducir por teclado? Solicitar que elija alguno? Dialogo de salida?
             }

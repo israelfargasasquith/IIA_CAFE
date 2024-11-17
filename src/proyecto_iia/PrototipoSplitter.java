@@ -17,7 +17,7 @@ import proyecto_iia.tareas.Splitter;
  *
  * @author Usuario
  */
-public class Proyecto_IIA {
+public class PrototipoSplitter {
 
     public static void main(String[] args) throws TransformerConfigurationException, TransformerException {
 

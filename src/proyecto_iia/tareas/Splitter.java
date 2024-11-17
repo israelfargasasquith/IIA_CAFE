@@ -6,8 +6,8 @@ package proyecto_iia.tareas;
 
 import comun.Mensaje;
 import comun.Slot;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.UUID;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -28,7 +28,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 /**
  *
@@ -36,10 +35,6 @@ import org.xml.sax.SAXException;
  */
 public class Splitter extends Tarea {
 
-    private String expresionSeparar;
-    private String expresionID;
-    private String expresionName;
-    private String expresionType;
     private Mensaje mensajeAProcesar;
     private DocumentBuilderFactory dbFactory;
     private DocumentBuilder dBuilder;
@@ -49,31 +44,19 @@ public class Splitter extends Tarea {
 
     public Splitter(EnumTarea t, ArrayList<Slot> se, ArrayList<Slot> sl) {
         super(t, se, sl);
-        this.expresionSeparar = "";
-        this.expresionID = "";
-        this.expresionName = "";
-        this.expresionType = "";
         dbFactory = DocumentBuilderFactory.newInstance();
         try {
             dBuilder = dbFactory.newDocumentBuilder();
-            xsltSource = new StreamSource(System.getProperty("user.dir") + System.getProperty("file.separator") + "src" + System.getProperty("file.separator") + "orders" + System.getProperty("file.separator") + "XSLT_Splitter.xsl");
         } catch (ParserConfigurationException ex) {
             System.out.println("Error parsing splitter constructor: " + ex.getMessage());
-            ex.printStackTrace();
-            System.exit(-1);
-        } catch (Exception ex) {
-            System.out.println("Error source not found, splitter constructor: " + ex.getMessage());
-            ex.printStackTrace();
             System.exit(-1);
         }
-
+        xsltSource = new StreamSource(System.getProperty("user.dir") + System.getProperty("file.separator") + "src" + System.getProperty("file.separator") + "orders" + System.getProperty("file.separator") + "XSLT_Splitter.xsl");
         transformerFactory = TransformerFactory.newInstance();
         try {
             transformer = transformerFactory.newTransformer(xsltSource);
         } catch (TransformerConfigurationException ex) {
             System.out.println("Error creating transformer, splitter constructor: " + ex.getMessage());
-            ex.printStackTrace();
-            System.exit(-1);
         }
 
     }
@@ -88,41 +71,36 @@ public class Splitter extends Tarea {
                 DOMResult domResult = new DOMResult();
                 DOMSource input = new DOMSource(mensajeAProcesar.getDocument());
 
-                transformer.setParameter("varSplitter", "drinks");
-                transformer.setParameter("varOriginal_ID", "order_id");
-                transformer.setParameter("varName", "name");
-                transformer.setParameter("varType", "type");
-
                 transformer.transform(input, domResult);
                 Document transformedDoc = (Document) domResult.getNode();
 
                 XPathFactory xfactory = XPathFactory.newInstance();
                 XPath xpath = xfactory.newXPath();
-                XPathExpression mensajesExpression = xpath.compile("count(mensajes/mensaje)");
+                XPathExpression mensajesExpression = xpath.compile("count(cafe_order/cafe_subOrder)");
                 Double nMensajesd = (Double) mensajesExpression.evaluate(transformedDoc, XPathConstants.NUMBER);
                 int nMensajes = nMensajesd.intValue();
-                //System.out.println("valor de numeroDeMensajes:" + nMensajes);
+                String nuevoID = UUID.randomUUID().toString();
 
-                //Now we create the split XMLs
                 for (int i = 0; i < nMensajes; i++) {
 
                     Document suppXml = dBuilder.newDocument();
-                    Element root = suppXml.createElement("mensajes");
+                    Element root = suppXml.createElement("cafe_subOrder");
                     suppXml.appendChild(root);
 
-                    String xpathQuery = "/mensajes/mensaje";
+                    String xpathQuery = "/cafe_order/cafe_subOrder";
                     XPathExpression query = xpath.compile(xpathQuery);
                     NodeList productNodesFiltered = (NodeList) query.evaluate(transformedDoc, XPathConstants.NODESET);
 
-                    // Add each <mensaje> node to the new document
-                    if (i < productNodesFiltered.getLength()) { // Ensure index is in bounds
+                    if (i < productNodesFiltered.getLength()) {
                         Node productNode = productNodesFiltered.item(i);
-                        Node clonedNode = suppXml.importNode(productNode, true);  // Clone node
+                        Node clonedNode = suppXml.importNode(productNode, true);
 
-                        root.appendChild(clonedNode);  // Append to the new document's root
+                        root.appendChild(clonedNode);
                     }
-                    //System.out.println("añadimos un mensaje al array salida");
-                    this.setMensajeSalida(new Mensaje(suppXml), 0);
+                    Mensaje nuevo = new Mensaje(suppXml, i, nMensajes);
+                    nuevo.setIdMsg(nuevoID);
+
+                    this.setMensajeSalida(nuevo, 0);
                 }
 
             } catch (TransformerException ex) {
@@ -138,21 +116,4 @@ public class Splitter extends Tarea {
 
         }
     }
-
-    public void setExpresionSeparar(String expresionSeparar) {
-        this.expresionSeparar = expresionSeparar;
-    }
-
-    public void setExpresionID(String expresionID) {
-        this.expresionID = expresionID;
-    }
-
-    public void setExpresionName(String expresionName) {
-        this.expresionName = expresionName;
-    }
-
-    public void setExpresionType(String expresionType) {
-        this.expresionType = expresionType;
-    }
-
 }

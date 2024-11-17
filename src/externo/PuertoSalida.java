@@ -4,23 +4,14 @@
  */
 package externo;
 
-import comun.Mensaje;
 import comun.Slot;
 import java.io.File;
-import java.io.IOException;
-import javax.swing.JFileChooser;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 
 /**
  *
@@ -46,6 +37,7 @@ public class PuertoSalida {
                 DOMSource source = new DOMSource(slotEntrada.getMensaje().getDocument());
                 StreamResult result = new StreamResult(new File(System.getProperty("user.dir") + System.getProperty("file.separator") + "src" + System.getProperty("file.separator") + "generatedOutput" + System.getProperty("file.separator") + "output" + nOutput + ".xml"));
                 transformer.transform(source, result);
+                System.out.println("Generada nueva salida con el nombre output"+nOutput+".xml");
                 nOutput++;
             }
 
