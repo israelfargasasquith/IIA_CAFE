@@ -15,33 +15,30 @@ import proyecto_iia.tareas.EnumTarea;
  *
  * @author israe
  */
-public class PrototipoJose {
+public class PrototipoDistributor {
 
     public static void main(String[] args) {
-        //BORRAR LOS GENERATED OUTPUT ANTES DE HACER ALGUNA EJECUCION, ASI VEMOS QUE SE GENERAN NUEVOS
         System.out.println("Jose's main");
         Slot sEntrada = new Slot();
         Slot sSalida = new Slot();
         ArrayList<Slot> arraySlotEntrada = new ArrayList<>();
         ArrayList<Slot> arraySlotSalida = new ArrayList<>();
         arraySlotEntrada.add(sEntrada);
-        arraySlotSalida.add(sSalida);
+//        arraySlotSalida.add(sSalida);
 
-        PuertoEntrada puertoEntrada = new PuertoEntrada(sEntrada);
+        PuertoEntrada puertoEntrada = new PuertoEntrada(sEntrada,null);
 
         //Bucle para probar con varias salidas
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 2; i++) {
             arraySlotSalida.add(sSalida);
         }
-//        Replicator tareaPrueba = new Replicator(EnumTarea.REPLICATOR, arraySlotEntrada, arraySlotSalida);
 
         String[] Condiciones = {"cold", "hot"};
-        Distributor tareaPrueba = new Distributor(EnumTarea.DISTRIBUTOR, arraySlotEntrada, arraySlotSalida, Condiciones, 2);
+        Distributor tareaPrueba = new Distributor(EnumTarea.DISTRIBUTOR, arraySlotEntrada, arraySlotSalida, Condiciones, 2, "type");
 
-        PuertoSalida puertoSalida = new PuertoSalida(sSalida);
+        PuertoSalida puertoSalida = new PuertoSalida(sSalida,null);
         puertoEntrada.generarEntrada();
         tareaPrueba.procesar();
         puertoSalida.generarSalida();
-
     }
 }

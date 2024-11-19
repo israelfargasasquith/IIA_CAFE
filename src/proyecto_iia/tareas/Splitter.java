@@ -155,7 +155,7 @@ public class Splitter extends Tarea {
                 }
                 Mensaje nuevo = new Mensaje(suppXml, i, nMensajes);
                 nuevo.setIdMsg(nuevoID);
-
+                System.out.println("Added nuevo mensaje en la salida");
                 this.setMensajeSalida(nuevo, 0);
             }
 

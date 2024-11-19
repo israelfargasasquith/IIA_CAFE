@@ -17,36 +17,37 @@ import org.w3c.dom.NodeList;
  */
 public class Distributor extends Tarea {
 
-     private Mensaje mensaje;
+    private Mensaje mensaje;
 
-    
     private String[] Condiciones;
     private int NCondiciones;
-    
-    public Distributor(EnumTarea t, ArrayList<Slot> se, ArrayList<Slot> sl, String[] Condic, int NumCond) {
+    private String tagALeer;
+
+    public Distributor(EnumTarea t, ArrayList<Slot> se, ArrayList<Slot> sl, String[] Condic, int NumCond, String tagALeer) {
         super(t, se, sl);
         Condiciones = new String[NumCond];
-        for(int i = 0; i<NumCond; i++){
-          Condiciones[i] = Condic[i];
-        }  
+        for (int i = 0; i < NumCond; i++) {
+            Condiciones[i] = Condic[i];
+        }
         NCondiciones = NumCond;
+        this.tagALeer = tagALeer;
     }
-    
+
     @Override
     public void procesar() {
         //Obtiene el mensaje
         mensaje = getMensajeEntrada(0);   //Solo tiene 1 entrada
-        Element typeElement = (Element) mensaje.getDocument().getElementsByTagName("type").item(0);
-        
+        Element typeElement = (Element) mensaje.getDocument().getElementsByTagName(tagALeer).item(0);
+
         //Comprueba con la condición de cada salida
         for (int i = 0; i < getNSalidas(); i++) {
             String typeText = typeElement.getTextContent();
-            
+
             //Comprueba si coincide en el mensaje alguna condición
 //            for (int j = 0; j < Condiciones.length; j++) {
-                if(typeText.contains(Condiciones[i])){
-                    super.setMensajeSalida(mensaje, i);                
-                }
+            if (typeText.contains(Condiciones[i])) {
+                super.setMensajeSalida(mensaje, i);
+            }
 //            }
         }
     }

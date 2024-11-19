@@ -6,14 +6,8 @@ package externo;
 
 import comun.Mensaje;
 import comun.Slot;
-import java.io.File;
-import java.io.IOException;
-import javax.swing.JFileChooser;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import java.util.ArrayList;
 import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 
 /**
  *
@@ -22,40 +16,23 @@ import org.xml.sax.SAXException;
 public class PuertoEntrada {
 
     private Slot slotSalida;
+    private ArrayList<Document> slotEntrada;
 
-    public PuertoEntrada(Slot slotSalida) {
+    public PuertoEntrada(Slot slotSalida, ArrayList<Document> slotEntrada) {
         this.slotSalida = slotSalida;
+        this.slotEntrada = slotEntrada;
     }
+    
+    public void setSlotEntradaDocumentos(ArrayList<Document> sEntradaDoc){
+        this.slotEntrada = sEntradaDoc;
+    }
+    
 
     public void generarEntrada() {
-
-        try {
-
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-
-            JFileChooser tmp = new JFileChooser();
-            tmp.setCurrentDirectory(new File(System.getProperty("user.dir") + System.getProperty("file.separator") + "src" + System.getProperty("file.separator") + "orders"));
-
-            int aproved = tmp.showDialog(null, JFileChooser.APPROVE_SELECTION);
-            if (aproved == JFileChooser.APPROVE_OPTION) {
-                File inputFile = tmp.getSelectedFile();
-                Document doc = dBuilder.parse(inputFile);
-                Mensaje nuevo = new Mensaje(doc);
-                System.out.println("Mensaje creado por el puerto de entrada con id: "+nuevo.getIdMsg());
-                slotSalida.addMensaje(nuevo);
-            } else {
-                //Introducir por teclado? Solicitar que elija alguno? Dialogo de salida?
-            }
-        } catch (ParserConfigurationException ex) {
-            System.out.println("Error de parsing:" + ex.getMessage());
-            System.exit(1);
-        } catch (IOException ex) {
-            System.out.println("Error de IO: " + ex.getMessage());
-            System.exit(2);
-        } catch (SAXException ex) {
-            System.out.println("Error de sax: " + ex.getMessage());
-            System.exit(3);
+        while(!slotEntrada.isEmpty()){
+            System.out.println("Salida del puerto de entrada generada");
+            Mensaje nuevo = new Mensaje(slotEntrada.removeFirst());
+            slotSalida.addMensaje(nuevo);
         }
     }
 
