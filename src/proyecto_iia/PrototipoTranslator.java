@@ -5,8 +5,8 @@
 package proyecto_iia;
 
 import comun.Slot;
-import externo.ConectorExternoEntrada;
-import externo.ConectorExternoSalida;
+import externo.ConectorGenerador;
+import externo.ConectorReceptor;
 import externo.PuertoEntrada;
 import externo.PuertoSalida;
 import java.util.ArrayList;
@@ -35,8 +35,8 @@ public class PrototipoTranslator {
         Translator tareaPrueba = new Translator(EnumTarea.TRANSLATOR, arraySlotEntrada, arraySlotSalida);
         PuertoSalida puertoSalida = new PuertoSalida(sSalida, sSalidaPuertoSalida);
 
-        ConectorExternoEntrada cExEntrada = new ConectorExternoEntrada();
-        ConectorExternoSalida cExSalida = new ConectorExternoSalida(sSalidaPuertoSalida);
+        ConectorGenerador cExEntrada = new ConectorGenerador();
+        ConectorReceptor cExSalida = new ConectorReceptor(sSalidaPuertoSalida);
 
         tareaPrueba.setSQLCall(true);
         listDocuments = cExEntrada.generarEntrada();

@@ -146,7 +146,7 @@ public class Splitter extends Tarea {
                     System.out.println("Error query evaluate 2 splitter: " + ex.getMessage());
                     return;
                 }
-
+                
                 if (i < productNodesFiltered.getLength()) {
                     Node productNode = productNodesFiltered.item(i);
                     Node clonedNode = suppXml.importNode(productNode, true);

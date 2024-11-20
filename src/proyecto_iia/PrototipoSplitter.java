@@ -5,8 +5,8 @@
 package proyecto_iia;
 
 import comun.Slot;
-import externo.ConectorExternoEntrada;
-import externo.ConectorExternoSalida;
+import externo.ConectorGenerador;
+import externo.ConectorReceptor;
 import externo.PuertoEntrada;
 import externo.PuertoSalida;
 import java.util.ArrayList;
@@ -39,8 +39,8 @@ public class PrototipoSplitter {
         Splitter tareaPrueba = new Splitter(EnumTarea.SPLITTER, arraySlotEntrada, arraySlotSalida);
         PuertoSalida puertoSalida = new PuertoSalida(sSalida, sSalidaPuertoSalida);
 
-        ConectorExternoEntrada cExEntrada = new ConectorExternoEntrada();
-        ConectorExternoSalida cExSalida = new ConectorExternoSalida(sSalidaPuertoSalida);
+        ConectorGenerador cExEntrada = new ConectorGenerador();
+        ConectorReceptor cExSalida = new ConectorReceptor(sSalidaPuertoSalida);
         
         listDocuments =cExEntrada.generarEntrada();
         puertoEntrada.setSlotEntradaDocumentos(listDocuments);

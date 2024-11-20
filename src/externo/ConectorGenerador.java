@@ -18,7 +18,7 @@ import org.xml.sax.SAXException;
  *
  * @author israe
  */
-public class ConectorExternoEntrada {
+public class ConectorGenerador {
 
     public ArrayList<Document> generarEntrada() {
         try {

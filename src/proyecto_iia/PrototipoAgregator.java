@@ -6,8 +6,8 @@ package proyecto_iia;
 
 import comun.Mensaje;
 import comun.Slot;
-import externo.ConectorExternoEntrada;
-import externo.ConectorExternoSalida;
+import externo.ConectorGenerador;
+import externo.ConectorReceptor;
 import externo.PuertoSalida;
 import java.io.File;
 import java.io.IOException;
@@ -38,8 +38,8 @@ public class PrototipoAgregator {
         ArrayList<Slot> arraySlotEntrada = new ArrayList<>();
         ArrayList<Slot> arraySlotSalida = new ArrayList<>();
         
-        ConectorExternoEntrada cExEntrada = new ConectorExternoEntrada();
-        ConectorExternoSalida cExSalida = new ConectorExternoSalida(sEntradaConectorSalida);
+        ConectorGenerador cExEntrada = new ConectorGenerador();
+        ConectorReceptor cExSalida = new ConectorReceptor(sEntradaConectorSalida);
         
         Agregator tareaPrueba = new Agregator(EnumTarea.AGREGATOR, arraySlotEntrada, arraySlotSalida);
         PuertoSalida puertoSalida = new PuertoSalida(sSalida,sSalidaPuertoSalida);

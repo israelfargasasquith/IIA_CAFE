@@ -4,7 +4,10 @@
  */
 package externo;
 
+import comun.Mensaje;
 import comun.Slot;
+import java.util.ArrayList;
+import org.w3c.dom.Document;
 
 /**
  *
@@ -13,18 +16,18 @@ import comun.Slot;
 public class PuertoSalida {
 
     private Slot slotEntrada;
-    private Slot slotSalida;
+    private ArrayList<Document> documentosSalida;
 
-    public PuertoSalida(Slot slotEntrada,Slot slotSalida) {
+    public PuertoSalida(Slot slotEntrada) {
         this.slotEntrada = slotEntrada;
-        this.slotSalida = slotSalida;
     }
 
     public void generarSalida() {
 
         while (!slotEntrada.isEmpty()) {
-            System.out.println("Salida generada por el puerto de salida");
-            slotSalida.addMensaje(slotEntrada.getMensaje());
+            Mensaje tmp = slotEntrada.getMensaje();
+            System.out.println("El mensaje: " + tmp.getIdMsg()+ " sale por el puerto salida");
+            
         }
 
     }

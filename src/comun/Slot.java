@@ -6,17 +6,16 @@ package comun;
 
 import java.util.LinkedList;
 import java.util.Queue;
-import org.w3c.dom.Document;
 
 /**
  *
  * @author israe
  */
 public class Slot {
-    private Queue<Mensaje> colaMensajes;
+    private final Queue<Mensaje> colaMensajes;
     
     public Slot(){
-        colaMensajes = new LinkedList<Mensaje>();
+        colaMensajes = new LinkedList<>();
     }
     
     public void addMensaje(Mensaje msj){

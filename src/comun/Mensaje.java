@@ -85,7 +85,7 @@ public class Mensaje {
             return result;
         } catch (TransformerException ex) {
             System.out.println("Error tranformacion en toString: " + ex.getMessage());
-            System.exit(6);
+            System.exit(1);
             return "";
         }
     }

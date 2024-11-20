@@ -13,24 +13,25 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.Document;
 
 /**
  *
  * @author israe
  */
-public class ConectorExternoSalida {
+public class ConectorReceptor {
 
-    private Slot slotEntrada;
+    private ArrayList<Document> documentosSalida;
 
-    public ConectorExternoSalida(Slot slotEntrada) {
-        this.slotEntrada = slotEntrada;
+    public ConectorReceptor(ArrayList<Document> documentosSalida) {
+        this.documentosSalida = documentosSalida;
     }
 
     public void generarSalida() {
 
         try {
             int nOutput = 0;
-            while (!slotEntrada.isEmpty()) {
+            while (!documentosSalida.isEmpty()) {
                 TransformerFactory transformerFactory = TransformerFactory.newInstance();
                 Transformer transformer = transformerFactory.newTransformer();
                 transformer.setOutputProperty(OutputKeys.INDENT, "yes");
@@ -46,7 +47,7 @@ public class ConectorExternoSalida {
             System.exit(1);
         } catch (Exception ex) {
             System.out.println("Error inexperado : " + ex.getMessage());
-            System.exit(2);
+            System.exit(2);s
         }
     }
 
