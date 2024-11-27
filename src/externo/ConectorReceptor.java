@@ -5,7 +5,6 @@
 package externo;
 
 import java.io.File;
-import java.util.ArrayList;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -20,27 +19,25 @@ import org.w3c.dom.Document;
  */
 public class ConectorReceptor {
 
-    private ArrayList<Document> documentosSalida;
+    private int nOutput;
 
-    public ConectorReceptor(ArrayList<Document> documentosSalida) {
-        this.documentosSalida = documentosSalida;
+    public ConectorReceptor() {
+        nOutput = 0;
     }
 
-    public void generarSalida(String tipoSalida) {
+    public void generarSalida(String tipoSalida, Document doc) {
 
         if (tipoSalida.equalsIgnoreCase("ficheros")) {
             try {
-                int nOutput = 0;
-                while (!documentosSalida.isEmpty()) {
-                    TransformerFactory transformerFactory = TransformerFactory.newInstance();
-                    Transformer transformer = transformerFactory.newTransformer();
-                    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-                    DOMSource source = new DOMSource(documentosSalida.removeFirst());
-                    StreamResult result = new StreamResult(new File(System.getProperty("user.dir") + System.getProperty("file.separator") + "src" + System.getProperty("file.separator") + "generatedOutput" + System.getProperty("file.separator") + "output" + nOutput + ".xml"));
-                    transformer.transform(source, result);
-                    System.out.println("Generada nueva salida con el nombre output" + nOutput + ".xml");
-                    nOutput++;
-                }
+
+                TransformerFactory transformerFactory = TransformerFactory.newInstance();
+                Transformer transformer = transformerFactory.newTransformer();
+                transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+                DOMSource source = new DOMSource(doc);
+                StreamResult result = new StreamResult(new File(System.getProperty("user.dir") + File.separator + "src" + File.separator + "generatedOutput" + File.separator + "output" + nOutput + ".xml"));
+                transformer.transform(source, result);
+                System.out.println("Generada nueva salida con el nombre output" + nOutput + ".xml");
+                nOutput++;
 
             } catch (TransformerException ex) {
                 System.out.println("Error de Transformer puerto salida:" + ex.getMessage());
@@ -49,10 +46,8 @@ public class ConectorReceptor {
                 System.out.println("Error inexperado : " + ex.getMessage());
                 System.exit(1);
             }
-        }else{
-            for (Document document : documentosSalida) {
-                System.out.println(document.toString());
-            }
+        } else {
+                System.out.println(doc);
         }
     }
 

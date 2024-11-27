@@ -6,6 +6,7 @@ package proyecto_iia.tareas;
 
 import comun.Mensaje;
 import comun.Slot;
+import java.io.File;
 import java.util.ArrayList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -25,7 +26,6 @@ import org.w3c.dom.Document;
  */
 public class Translator extends Tarea {
 
-    private boolean SQLCall;
     private DocumentBuilderFactory dbFactory;
     private DocumentBuilder dBuilder;
     private final StreamSource xsltSource;
@@ -42,7 +42,7 @@ public class Translator extends Tarea {
             System.out.println("Error parsing trasnlator constructor: " + ex.getMessage());
             System.exit(-1);
         }
-        xsltSource = new StreamSource(System.getProperty("user.dir") + System.getProperty("file.separator") + "src" + System.getProperty("file.separator") + "orders" + System.getProperty("file.separator") + "XSLT_Translator.xsl");
+        xsltSource = new StreamSource(System.getProperty("user.dir") + File.separator + "src" + File.separator + "orders" + File.separator + "XSLT_Translator.xsl");
         transformerFactory = TransformerFactory.newInstance();
         try {
             transformer = transformerFactory.newTransformer(xsltSource);
@@ -50,23 +50,10 @@ public class Translator extends Tarea {
             System.out.println("Error creating transformer, trasnlator constructor: " + ex.getMessage());
         }
 
-        //especificas de Cafe
-    }
-
-    public void setSQLCall(boolean SQLCall) {
-        this.SQLCall = SQLCall;
     }
 
     @Override
     public void procesar() {
-        if (SQLCall) {
-            procesarSQL();
-        } else {
-
-        }
-    }
-
-    private void procesarSQL() {
         while (!this.isEmpty(0)) {
             mensajeAProcesar = this.getMensajeEntrada(0);
 
@@ -85,4 +72,5 @@ public class Translator extends Tarea {
             this.setMensajeSalida(nuevo, 0);
         }
     }
+
 }

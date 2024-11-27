@@ -6,7 +6,6 @@ package externo;
 
 import comun.Mensaje;
 import comun.Slot;
-import java.util.ArrayList;
 import org.w3c.dom.Document;
 
 /**
@@ -16,24 +15,15 @@ import org.w3c.dom.Document;
 public class PuertoEntrada {
 
     private Slot slotSalida;
-    private ArrayList<Document> slotEntrada;
 
-    public PuertoEntrada(Slot slotSalida, ArrayList<Document> slotEntrada) {
+    public PuertoEntrada(Slot slotSalida) {
         this.slotSalida = slotSalida;
-        this.slotEntrada = slotEntrada;
     }
-    
-    public void setSlotEntradaDocumentos(ArrayList<Document> sEntradaDoc){
-        this.slotEntrada = sEntradaDoc;
-    }
-    
 
-    public void generarEntrada() {
-        while(!slotEntrada.isEmpty()){
-            System.out.println("Salida del puerto de entrada generada");
-            Mensaje nuevo = new Mensaje(slotEntrada.removeFirst());
-            slotSalida.addMensaje(nuevo);
-        }
+    public void generarEntrada(Document input) {
+        System.out.println("Salida del puerto de entrada generada");
+        Mensaje nuevo = new Mensaje(input, input.getElementsByTagName(""));
+        slotSalida.addMensaje(nuevo);
     }
 
 }

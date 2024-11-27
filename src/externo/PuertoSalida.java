@@ -6,8 +6,6 @@ package externo;
 
 import comun.Mensaje;
 import comun.Slot;
-import java.util.ArrayList;
-import org.w3c.dom.Document;
 
 /**
  *
@@ -16,21 +14,18 @@ import org.w3c.dom.Document;
 public class PuertoSalida {
 
     private Slot slotEntrada;
-    private ArrayList<Document> documentosSalida;
+    private ConectorReceptor conectorReceptor;
 
-    public PuertoSalida(Slot slotEntrada, ArrayList<Document> documentosSalida) {
+    public PuertoSalida(Slot slotEntrada, ConectorReceptor conectorReceptor) {
         this.slotEntrada = slotEntrada;
-        this.documentosSalida = documentosSalida;
+        this.conectorReceptor = conectorReceptor;
     }
 
     public void generarSalida() {
-
         while (!slotEntrada.isEmpty()) {
             Mensaje tmp = slotEntrada.getMensaje();
             System.out.println("El mensaje: " + tmp.getIdMsg() + " sale por el puerto salida");
-            documentosSalida.add(tmp.getDocument());
-
+            conectorReceptor.generarSalida("ficheros", tmp.getDocument());
         }
-
     }
 }

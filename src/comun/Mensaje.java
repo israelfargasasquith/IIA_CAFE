@@ -22,21 +22,21 @@ public class Mensaje {
 
     
     private String idMsg;
-    private int idSegment;
+    private int idDocument;
     private int nSegments;
     private Document document;
 
-    public Mensaje(Document msj) {
+    public Mensaje(Document msj,int idDocument) {
         document = msj;
         idMsg = UUID.randomUUID().toString();
-        idSegment = -1;
+        idDocument = idDocument;
         nSegments = 0;
     }
 
-    public Mensaje(Document msj, int idSegment, int nSegments) {
+    public Mensaje(Document msj, int idDocument, int nSegments) {
         document = msj;
         idMsg = UUID.randomUUID().toString();
-        this.idSegment = idSegment;
+        this.idDocument = idDocument;
         this.nSegments = nSegments;
     }
 
@@ -49,11 +49,11 @@ public class Mensaje {
     }
 
     public int getIdSegment() {
-        return idSegment;
+        return idDocument;
     }
 
-    public void setIdSegment(int idSegment) {
-        this.idSegment = idSegment;
+    public void setIdSegment(int idDocument) {
+        this.idDocument = idDocument;
     }
 
     public int getnSegments() {

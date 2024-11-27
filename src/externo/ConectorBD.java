@@ -16,18 +16,22 @@ import java.sql.Statement;
  */
 public class ConectorBD {
 
-    public void test() {
-        String url = "jdbc:mysql://localhost:3306/cafe";
-        String username = "root";
-        String password = "pA970_1lINZ6wLk3OOr`8psZ~";
+    private final String url = "jdbc:mysql://localhost:3306/cafe";
+    private final String username = "root";
+    private final String password = "pA970_1lINZ6wLk3OOr`8psZ~";
+
+    
+
+    public void consulta(String query) {
+
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
             Connection connection = DriverManager.getConnection(url, username, password);
-
             Statement statement = connection.createStatement();
 
-            ResultSet resultset = statement.executeQuery("SELECT * FROM bebidas;");
+            ResultSet resultset = statement.executeQuery(query);
+
             System.out.println("id --- nombre --- tipo --- precio");
             while (resultset.next()) {
                 System.out.println(resultset.getInt(1) + ", " + resultset.getString(2) + ", " + resultset.getString(3) + ", " + resultset.getString(4));
@@ -35,9 +39,7 @@ public class ConectorBD {
 
             connection.close();
 
-        } catch (ClassNotFoundException ex) {
-            System.out.println("Error: " + ex.getMessage());
-        } catch (SQLException ex) {
+        } catch (ClassNotFoundException | SQLException ex) {
             System.out.println("Error: " + ex.getMessage());
         }
     }

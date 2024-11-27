@@ -20,6 +20,8 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 import proyecto_iia.tareas.Agregator;
 import proyecto_iia.tareas.EnumTarea;
+import proyecto_iia.tareas.Splitter;
+import proyecto_iia.tareas.Tarea;
 
 /**
  *
@@ -29,24 +31,23 @@ public class PrototipoAgregator {
 
     public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
 
-        //BORRAR LOS GENERATED OUTPUT ANTES DE HACER ALGUNA EJECUCION, ASI VEMOS QUE SE GENERAN NUEVOS
         System.out.println("Isra's agregator main");
-        ArrayList<Document> listDocumentsInput = new ArrayList<>();
-        ArrayList<Document> listDocumentsOutput = new ArrayList<>();
+
         Slot sEntrada = new Slot();
         Slot sSalida = new Slot();
-//        Slot sPuertoSalida = new Slot();
-//        Slot sPuertoEntrada = new Slot();
         ArrayList<Slot> arraySlotEntrada = new ArrayList<>();
         ArrayList<Slot> arraySlotSalida = new ArrayList<>();
+        arraySlotEntrada.add(sEntrada);
+        arraySlotSalida.add(sSalida);
 
-        ConectorFicheroGenerador cExEntrada = new ConectorFicheroGenerador(listDocumentsInput);
-        ConectorReceptor cExSalida = new ConectorReceptor(listDocumentsOutput);
+        PuertoEntrada puertoEntrada = new PuertoEntrada(sEntrada);
 
-        PuertoEntrada puertoEntrada = new PuertoEntrada(sEntrada, listDocumentsInput);
+        ConectorFicheroGenerador cGenerador = new ConectorFicheroGenerador(puertoEntrada);
+        ConectorReceptor cReceptor = new ConectorReceptor();
 
-        Agregator tareaPrueba = new Agregator(EnumTarea.AGREGATOR, arraySlotEntrada, arraySlotSalida);
-        PuertoSalida puertoSalida = new PuertoSalida(sSalida, listDocumentsOutput);
+        PuertoSalida puertoSalida = new PuertoSalida(sSalida, cReceptor);
+
+        Tarea tareaPrueba = new Agregator(EnumTarea.AGREGATOR, arraySlotEntrada, arraySlotSalida);
 
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -60,12 +61,8 @@ public class PrototipoAgregator {
         sEntrada.addMensaje(parte0);
         sEntrada.addMensaje(parte1);
 
-        arraySlotEntrada.add(sEntrada);
-        arraySlotSalida.add(sSalida);
-
+        cGenerador.generarEntrada();
         tareaPrueba.procesar();
         puertoSalida.generarSalida();
-        cExSalida.generarSalida("ficheros");
-
     }
 }

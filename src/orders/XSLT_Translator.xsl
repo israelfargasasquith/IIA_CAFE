@@ -3,7 +3,7 @@
     <xsl:template match="/cafe_subOrder">
         <SQL>
             SELECT p.precio
-            FROM PRECIOSCALIENTES p
+            FROM bebidas p
             WHERE p.name = <xsl:value-of select="//name"/>
         </SQL>
     </xsl:template>

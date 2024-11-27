@@ -6,8 +6,7 @@ package externo;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import javax.swing.JFileChooser;
+import java.util.Random;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -19,43 +18,40 @@ import org.xml.sax.SAXException;
  * @author israe
  */
 public class ConectorFicheroGenerador {
-    
-    private ArrayList<Document> devolver;
-    
-    public ConectorFicheroGenerador(ArrayList<Document> devolver){
-        this.devolver = devolver;
+
+    private PuertoEntrada puertoEntrada;
+
+    public ConectorFicheroGenerador(PuertoEntrada puertoEntrada) {
+        this.puertoEntrada = puertoEntrada;
     }
 
-    public ArrayList<Document> generarEntrada() {
+    public void generarEntrada() {
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = null;
         try {
-            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-
-            JFileChooser tmp = new JFileChooser();
-            tmp.setCurrentDirectory(new File(System.getProperty("user.dir") + System.getProperty("file.separator") + "src" + System.getProperty("file.separator") + "orders"));
-
-            int aproved = tmp.showDialog(null, JFileChooser.APPROVE_SELECTION);
-            if (aproved == JFileChooser.APPROVE_OPTION) {
-                File inputFile = tmp.getSelectedFile();
-                Document doc = dBuilder.parse(inputFile);
-                devolver.add(doc);
-                System.out.println("Salida del conector externo generada");
-                return devolver;
-            } else {
-                //Introducir por teclado? Solicitar que elija alguno? Dialogo de salida?
-                return devolver;
-            }
+            dBuilder = dbFactory.newDocumentBuilder();
         } catch (ParserConfigurationException ex) {
-            System.out.println("Error de parsing:" + ex.getMessage());
+            System.out.println("Error al generar la entrada dbFactory: " + ex.getMessage());
+            System.exit(1);
+        }
+        Document doc = null;
+        Random rand = new Random(System.nanoTime());
+        try {
+            int randomInt = rand.nextInt(1, 9);
+            //doc = dBuilder.parse(new File(System.getProperty("user.dir") + File.separator + "src" + File.separator + "orders"+File.separator+"order"+randomInt+".xml"));
+            doc = dBuilder.parse(new File(System.getProperty("user.dir") + File.separator + "src" + File.separator + "orders" + File.separator + "order1.xml"));
+        } catch (SAXException ex) {
+            System.out.println("Error al generar la entrada Parse: " + ex.getMessage());
             System.exit(1);
         } catch (IOException ex) {
-            System.out.println("Error de IO: " + ex.getMessage());
-            System.exit(2);
-        } catch (SAXException ex) {
-            System.out.println("Error de sax: " + ex.getMessage());
-            System.exit(3);
+            System.out.println("Error al generar la entrada IO: " + ex.getMessage());
+            System.exit(1);
+        } catch (Exception ex) {
+            System.out.println("Error al generar la entrada error no experado: " + ex.getMessage());
+            System.exit(1);
         }
-        return null;
+        puertoEntrada.generarEntrada(doc);
 
+        System.out.println("Salida del conector externo generada");
     }
 }

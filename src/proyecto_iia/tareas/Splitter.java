@@ -29,6 +29,7 @@ public class Splitter extends Tarea {
     private XPathFactory xfactory;
     private XPath xpath;
     private String expresionXPathContarMensajes;
+    private String idExpresion;
     private String xPathQuery;
     private Slot input;
     private Slot output;
@@ -48,18 +49,14 @@ public class Splitter extends Tarea {
 
         xfactory = XPathFactory.newInstance();
         xpath = xfactory.newXPath();
-
-        //especificas de Cafe
-        expresionXPathContarMensajes = "count(cafe_order/cafe_subOrder)";
-        xPathQuery = "//drinks/*";
-    }
-
-    public void setExpresionXPath(String expresion) {
-        this.expresionXPathContarMensajes = expresion;
     }
 
     public void setXPathQuery(String nuevo) {
         this.xPathQuery = nuevo;
+    }
+
+    public void setIdExpresion(String nuevo) {
+        this.idExpresion = nuevo;
     }
 
     @Override
@@ -67,31 +64,31 @@ public class Splitter extends Tarea {
 
         Mensaje mensajeAProcesar = this.input.getMensaje();
         Document doc = mensajeAProcesar.getDocument(); //Obtiene el documento del cuerpo del mensaje
-        NodeList drinks = null;
+        NodeList lista = null;
         try {
-            drinks = (NodeList) xpath.compile(xPathQuery).evaluate(doc, XPathConstants.NODESET);
+            lista = (NodeList) xpath.compile(xPathQuery).evaluate(doc, XPathConstants.NODESET);
         } catch (XPathExpressionException ex) {
             System.out.println("Error splitter al extraer la lista de nodos: " + ex.getMessage());
         }
 
-        NodeList order = doc.getElementsByTagName("order_id");
-        Node ord = order.item(0);
+        NodeList order = doc.getElementsByTagName(idExpresion);
+        Node id = order.item(0);
 
         int j = 0;
-        if (drinks != null) {
-            for (int i = 0; i < drinks.getLength(); i++) //Para cada nodo
+        if (lista != null) {
+            for (int i = 0; i < lista.getLength(); i++) //Para cada nodo
             {
                 Document doc2 = dBuilder.newDocument();
-                Node b = drinks.item(i);
+                Node b = lista.item(i);
 
                 if (b.getNodeType() == Node.ELEMENT_NODE) {
-                    Node drink = drinks.item(i);
+                    Node nodo = lista.item(i);
 
-                    if (drink.getNodeType() == Node.ELEMENT_NODE) {
-                        Node copyNode = doc2.importNode(drink, true);
-                        doc2.appendChild(copyNode);
-                        Node TagOrder = doc2.importNode(ord, true);
+                    if (nodo.getNodeType() == Node.ELEMENT_NODE) {
+                        Node TagOrder = doc2.importNode(id, true);
                         doc2.getDocumentElement().appendChild(TagOrder);
+                        Node copyNode = doc2.importNode(nodo, true);
+                        doc2.appendChild(copyNode);
                     }
                 }
 
