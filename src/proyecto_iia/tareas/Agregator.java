@@ -7,21 +7,15 @@ package proyecto_iia.tareas;
 import comun.Mensaje;
 import comun.Slot;
 import java.util.ArrayList;
-import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Source;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamSource;
-import org.w3c.dom.Document;
 
 /**
  *

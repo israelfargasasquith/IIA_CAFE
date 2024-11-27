@@ -5,7 +5,7 @@
 package proyecto_iia;
 
 import comun.Slot;
-import externo.ConectorGenerador;
+import externo.ConectorFicheroGenerador;
 import externo.ConectorReceptor;
 import externo.PuertoEntrada;
 import externo.PuertoSalida;
@@ -26,33 +26,29 @@ public class PrototipoSplitter {
 
         //BORRAR LOS GENERATED OUTPUT ANTES DE HACER ALGUNA EJECUCION, ASI VEMOS QUE SE GENERAN NUEVOS
         System.out.println("Isra's splitter main");
-        ArrayList<Document> listDocuments = new ArrayList<>();
+        ArrayList<Document> listDocumentsInput = new ArrayList<>();
+        ArrayList<Document> listDocumentsOutput = new ArrayList<>();
         Slot sEntrada = new Slot();
         Slot sSalida = new Slot();
-        Slot sSalidaPuertoSalida = new Slot();
+//        Slot sPuertoSalida = new Slot();
+//        Slot sPuertoEntrada = new Slot();
         ArrayList<Slot> arraySlotEntrada = new ArrayList<>();
         ArrayList<Slot> arraySlotSalida = new ArrayList<>();
         arraySlotEntrada.add(sEntrada);
         arraySlotSalida.add(sSalida);
-
-        PuertoEntrada puertoEntrada = new PuertoEntrada(sEntrada, listDocuments);
-        Splitter tareaPrueba = new Splitter(EnumTarea.SPLITTER, arraySlotEntrada, arraySlotSalida);
-        PuertoSalida puertoSalida = new PuertoSalida(sSalida, sSalidaPuertoSalida);
-
-        ConectorGenerador cExEntrada = new ConectorGenerador();
-        ConectorReceptor cExSalida = new ConectorReceptor(sSalidaPuertoSalida);
         
-        listDocuments =cExEntrada.generarEntrada();
-        puertoEntrada.setSlotEntradaDocumentos(listDocuments);
+        ConectorFicheroGenerador cExEntrada = new ConectorFicheroGenerador(listDocumentsInput);
+        ConectorReceptor cExSalida = new ConectorReceptor(listDocumentsOutput);
+
+        PuertoEntrada puertoEntrada = new PuertoEntrada(sEntrada, listDocumentsInput);
+        Splitter tareaPrueba = new Splitter(EnumTarea.SPLITTER, arraySlotEntrada, arraySlotSalida);
+        PuertoSalida puertoSalida = new PuertoSalida(sSalida,listDocumentsOutput);
+
+        listDocumentsInput =cExEntrada.generarEntrada();
         puertoEntrada.generarEntrada();
         tareaPrueba.procesar();
         puertoSalida.generarSalida();
-        cExSalida.generarSalida();
+        cExSalida.generarSalida("ficheros");
 
-        /* Para ver la salida de la tarea sin generar fichero, hay que quitar puertoSalida.generarSalida()
-        while (!arraySlotSalida.get(0).isEmpty()) {
-            System.out.println(arraySlotSalida.get(0).getMensaje().toString());
-
-        }*/
     }
 }

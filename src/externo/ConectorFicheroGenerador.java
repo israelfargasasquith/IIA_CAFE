@@ -18,11 +18,16 @@ import org.xml.sax.SAXException;
  *
  * @author israe
  */
-public class ConectorGenerador {
+public class ConectorFicheroGenerador {
+    
+    private ArrayList<Document> devolver;
+    
+    public ConectorFicheroGenerador(ArrayList<Document> devolver){
+        this.devolver = devolver;
+    }
 
     public ArrayList<Document> generarEntrada() {
         try {
-            ArrayList<Document> devolver = new ArrayList<>();
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 

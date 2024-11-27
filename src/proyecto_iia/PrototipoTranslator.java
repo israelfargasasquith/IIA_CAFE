@@ -5,7 +5,7 @@
 package proyecto_iia;
 
 import comun.Slot;
-import externo.ConectorGenerador;
+import externo.ConectorFicheroGenerador;
 import externo.ConectorReceptor;
 import externo.PuertoEntrada;
 import externo.PuertoSalida;
@@ -22,34 +22,29 @@ public class PrototipoTranslator {
 
     public static void main(String[] args) {
         System.out.println("Isra's translator main");
-        ArrayList<Document> listDocuments = new ArrayList<>();
+        ArrayList<Document> listDocumentsInput = new ArrayList<>();
+        ArrayList<Document> listDocumentsOutput = new ArrayList<>();
         Slot sEntrada = new Slot();
         Slot sSalida = new Slot();
-        Slot sSalidaPuertoSalida = new Slot();
+//        Slot sPuertoSalida = new Slot();
+//        Slot sPuertoEntrada = new Slot();
         ArrayList<Slot> arraySlotEntrada = new ArrayList<>();
         ArrayList<Slot> arraySlotSalida = new ArrayList<>();
         arraySlotEntrada.add(sEntrada);
         arraySlotSalida.add(sSalida);
 
-        PuertoEntrada puertoEntrada = new PuertoEntrada(sEntrada, listDocuments);
+        ConectorFicheroGenerador cExEntrada = new ConectorFicheroGenerador(listDocumentsInput);
+        ConectorReceptor cExSalida = new ConectorReceptor(listDocumentsOutput);
+
+        PuertoEntrada puertoEntrada = new PuertoEntrada(sEntrada, listDocumentsInput);
         Translator tareaPrueba = new Translator(EnumTarea.TRANSLATOR, arraySlotEntrada, arraySlotSalida);
-        PuertoSalida puertoSalida = new PuertoSalida(sSalida, sSalidaPuertoSalida);
-
-        ConectorGenerador cExEntrada = new ConectorGenerador();
-        ConectorReceptor cExSalida = new ConectorReceptor(sSalidaPuertoSalida);
-
+        PuertoSalida puertoSalida = new PuertoSalida(sSalida, listDocumentsOutput);
         tareaPrueba.setSQLCall(true);
-        listDocuments = cExEntrada.generarEntrada();
-        System.out.println("size: "+listDocuments.size());
+
+        listDocumentsInput = cExEntrada.generarEntrada();
         puertoEntrada.generarEntrada();
         tareaPrueba.procesar();
         puertoSalida.generarSalida();
-        cExSalida.generarSalida();
-
-        /*// Para ver la salida de la tarea sin generar fichero, hay que quitar puertoSalida.generarSalida()
-        while (!arraySlotSalida.get(0).isEmpty()) {
-            System.out.println(arraySlotSalida.get(0).getMensaje().toString());
-
-        }*/
+        cExSalida.generarSalida("ficheros");
     }
 }

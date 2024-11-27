@@ -8,6 +8,6 @@ package externo;
  *
  * @author israe
  */
-public class ConectorExternoSolicitud {
+public class ConectorFichero {
     
 }

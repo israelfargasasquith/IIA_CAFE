@@ -18,16 +18,18 @@ public class PuertoSalida {
     private Slot slotEntrada;
     private ArrayList<Document> documentosSalida;
 
-    public PuertoSalida(Slot slotEntrada) {
+    public PuertoSalida(Slot slotEntrada, ArrayList<Document> documentosSalida) {
         this.slotEntrada = slotEntrada;
+        this.documentosSalida = documentosSalida;
     }
 
     public void generarSalida() {
 
         while (!slotEntrada.isEmpty()) {
             Mensaje tmp = slotEntrada.getMensaje();
-            System.out.println("El mensaje: " + tmp.getIdMsg()+ " sale por el puerto salida");
-            
+            System.out.println("El mensaje: " + tmp.getIdMsg() + " sale por el puerto salida");
+            documentosSalida.add(tmp.getDocument());
+
         }
 
     }

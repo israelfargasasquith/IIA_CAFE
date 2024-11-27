@@ -6,8 +6,9 @@ package proyecto_iia;
 
 import comun.Mensaje;
 import comun.Slot;
-import externo.ConectorGenerador;
+import externo.ConectorFicheroGenerador;
 import externo.ConectorReceptor;
+import externo.PuertoEntrada;
 import externo.PuertoSalida;
 import java.io.File;
 import java.io.IOException;
@@ -30,27 +31,29 @@ public class PrototipoAgregator {
 
         //BORRAR LOS GENERATED OUTPUT ANTES DE HACER ALGUNA EJECUCION, ASI VEMOS QUE SE GENERAN NUEVOS
         System.out.println("Isra's agregator main");
-        ArrayList<Document> listDocuments = new ArrayList<>();
+        ArrayList<Document> listDocumentsInput = new ArrayList<>();
+        ArrayList<Document> listDocumentsOutput = new ArrayList<>();
         Slot sEntrada = new Slot();
         Slot sSalida = new Slot();
-        Slot sSalidaPuertoSalida = new Slot();
-        Slot sEntradaConectorSalida = new Slot();
+//        Slot sPuertoSalida = new Slot();
+//        Slot sPuertoEntrada = new Slot();
         ArrayList<Slot> arraySlotEntrada = new ArrayList<>();
         ArrayList<Slot> arraySlotSalida = new ArrayList<>();
-        
-        ConectorGenerador cExEntrada = new ConectorGenerador();
-        ConectorReceptor cExSalida = new ConectorReceptor(sEntradaConectorSalida);
-        
-        Agregator tareaPrueba = new Agregator(EnumTarea.AGREGATOR, arraySlotEntrada, arraySlotSalida);
-        PuertoSalida puertoSalida = new PuertoSalida(sSalida,sSalidaPuertoSalida);
 
+        ConectorFicheroGenerador cExEntrada = new ConectorFicheroGenerador(listDocumentsInput);
+        ConectorReceptor cExSalida = new ConectorReceptor(listDocumentsOutput);
+
+        PuertoEntrada puertoEntrada = new PuertoEntrada(sEntrada, listDocumentsInput);
+
+        Agregator tareaPrueba = new Agregator(EnumTarea.AGREGATOR, arraySlotEntrada, arraySlotSalida);
+        PuertoSalida puertoSalida = new PuertoSalida(sSalida, listDocumentsOutput);
 
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-        Document doc0 = dBuilder.parse(new File(System.getProperty("user.dir") + System.getProperty("file.separator") + "src"
-                + System.getProperty("file.separator") + "generatedOutput" + System.getProperty("file.separator") + "output0.xml"));
-        Document doc1 = dBuilder.parse(new File(System.getProperty("user.dir") + System.getProperty("file.separator") + "src"
-                + System.getProperty("file.separator") + "generatedOutput" + System.getProperty("file.separator") + "output1.xml"));
+        Document doc0 = dBuilder.parse(new File(System.getProperty("user.dir") + File.separator + "src"
+                + File.separator + "generatedOutput" + File.separator + "output0.xml"));
+        Document doc1 = dBuilder.parse(new File(System.getProperty("user.dir") + File.separator + "src"
+                + File.separator + "generatedOutput" + File.separator + "output1.xml"));
         Mensaje parte0 = new Mensaje(doc0);
         Mensaje parte1 = new Mensaje(doc1);
 
@@ -60,14 +63,9 @@ public class PrototipoAgregator {
         arraySlotEntrada.add(sEntrada);
         arraySlotSalida.add(sSalida);
 
-        
         tareaPrueba.procesar();
         puertoSalida.generarSalida();
+        cExSalida.generarSalida("ficheros");
 
-        //Para ver la salida de la tarea sin generar fichero, hay que quitar puertoSalida.generarSalida()
-       /* while (!sSalidaPuertoSalida.isEmpty()) {
-            System.out.println(sSalidaPuertoSalida.getMensaje().toString());
-
-        }*/
     }
 }
