@@ -92,8 +92,8 @@ public class Splitter extends Tarea {
                     }
                 }
 
-                Mensaje nuevoMensaje = new Mensaje(doc2, mensajeAProcesar.getIdSegment(), i); //Crea un nuevo mensaje con el nuevo documento
-                output.addMensaje(nuevoMensaje); //Escribe en el slot de salida
+                Mensaje nuevoMensaje = new Mensaje(doc2, mensajeAProcesar.getIdSegment(), i);
+                output.addMensaje(nuevoMensaje); 
                 System.out.println("Nuevo mensaje" + i + " creado en el splitter y escrito en el slot correspondiente");
             }
         }

@@ -4,6 +4,7 @@
  */
 package proyecto_iia;
 
+import comun.Mensaje;
 import comun.Slot;
 import externo.ConectorFicheroGenerador;
 import externo.ConectorReceptor;
@@ -24,6 +25,9 @@ public class PrototipoSplitter {
 
     public static void main(String[] args) throws TransformerConfigurationException, TransformerException {
 
+        
+        Mensaje m = new Mensaje(null);
+        m.setTagName("id_order");
         Slot sEntrada = new Slot();
         Slot sSalida = new Slot();
         ArrayList<Slot> arraySlotEntrada = new ArrayList<>();

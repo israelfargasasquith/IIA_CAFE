@@ -5,6 +5,8 @@
 package proyecto_iia;
 
 import comun.Slot;
+import externo.ConectorFicheroGenerador;
+import externo.ConectorReceptor;
 import externo.PuertoEntrada;
 import externo.PuertoSalida;
 import java.util.ArrayList;
@@ -26,8 +28,11 @@ public class PrototipoDistributor {
         arraySlotEntrada.add(sEntrada);
 //        arraySlotSalida.add(sSalida);
 
-        PuertoEntrada puertoEntrada = new PuertoEntrada(sEntrada,null);
-
+        PuertoEntrada puertoEntrada = new PuertoEntrada(sEntrada);
+        ConectorFicheroGenerador cGenerador = new ConectorFicheroGenerador(puertoEntrada);
+        ConectorReceptor cReceptor = new ConectorReceptor();
+        PuertoSalida puertoSalida = new PuertoSalida(sSalida, cReceptor);
+        
         //Bucle para probar con varias salidas
         for (int i = 0; i < 2; i++) {
             arraySlotSalida.add(sSalida);
@@ -36,8 +41,6 @@ public class PrototipoDistributor {
         String[] Condiciones = {"cold", "hot"};
         Distributor tareaPrueba = new Distributor(EnumTarea.DISTRIBUTOR, arraySlotEntrada, arraySlotSalida, Condiciones, 2, "type");
 
-        PuertoSalida puertoSalida = new PuertoSalida(sSalida,null);
-        puertoEntrada.generarEntrada();
         tareaPrueba.procesar();
         puertoSalida.generarSalida();
     }

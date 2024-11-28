@@ -20,20 +20,21 @@ import org.w3c.dom.Document;
  */
 public class Mensaje {
 
-    
     private String idMsg;
     private int idDocument;
+    private int idSegment;
     private int nSegments;
     private Document document;
+    
 
-    public Mensaje(Document msj,int idDocument) {
+    public Mensaje(Document msj) {
         document = msj;
         idMsg = UUID.randomUUID().toString();
-        idDocument = idDocument;
+        idDocument = 
         nSegments = 0;
     }
 
-    public Mensaje(Document msj, int idDocument, int nSegments) {
+    public Mensaje(Document msj, int idDocument, int nSegments, int nSegmets) {
         document = msj;
         idMsg = UUID.randomUUID().toString();
         this.idDocument = idDocument;

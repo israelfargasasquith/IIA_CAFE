@@ -22,7 +22,7 @@ public class PuertoEntrada {
 
     public void generarEntrada(Document input) {
         System.out.println("Salida del puerto de entrada generada");
-        Mensaje nuevo = new Mensaje(input, input.getElementsByTagName(""));
+        Mensaje nuevo = new Mensaje(input);
         slotSalida.addMensaje(nuevo);
     }
 
