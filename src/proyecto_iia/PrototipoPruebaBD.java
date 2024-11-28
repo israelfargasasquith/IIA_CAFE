@@ -1,31 +1,31 @@
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package proyecto_iia;
 
-import comun.Mensaje;
 import comun.Slot;
+import externo.ConectorBD;
 import externo.ConectorFicheroGenerador;
 import externo.ConectorReceptor;
 import externo.PuertoEntrada;
 import externo.PuertoSalida;
+import externo.PuertoSolicitud;
 import java.util.ArrayList;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
 import proyecto_iia.tareas.EnumTarea;
-import proyecto_iia.tareas.Splitter;
+import proyecto_iia.tareas.Translator;
 
 /**
  *
- * @author Usuario
+ * @author israe
  */
-public class PrototipoSplitter {
+public class PrototipoPruebaBD {
 
-    public static void main(String[] args) throws TransformerConfigurationException, TransformerException {
-
+    public static void main(String[] args) {
+        System.out.println("Isra's translator main");
         Slot sEntrada = new Slot();
         Slot sSalida = new Slot();
+        Slot sSalidaSolicitud = new Slot();
         ArrayList<Slot> arraySlotEntrada = new ArrayList<>();
         ArrayList<Slot> arraySlotSalida = new ArrayList<>();
         arraySlotEntrada.add(sEntrada);
@@ -37,16 +37,18 @@ public class PrototipoSplitter {
         ConectorFicheroGenerador cGenerador = new ConectorFicheroGenerador(puertoEntrada);
         ConectorReceptor cReceptor = new ConectorReceptor();
 
-        PuertoSalida puertoSalida = new PuertoSalida(sSalida, cReceptor);
+        PuertoSalida puertoSalida = new PuertoSalida(sSalidaSolicitud, cReceptor);
 
-        Splitter tareaPrueba = new Splitter(EnumTarea.SPLITTER, arraySlotEntrada, arraySlotSalida);
-        tareaPrueba.setXPathQuerySeparar("//drinks/*");
-        tareaPrueba.setXPathQueryContar("count(cafe_order/drinks/drink)");
-        tareaPrueba.setxPathIdMensaje("//order_id");
+        ConectorBD conectorBD = new ConectorBD();
+
+        PuertoSolicitud puertoSolicitud = new PuertoSolicitud(conectorBD, sSalida, sSalidaSolicitud);
+        conectorBD.setPuertoSolicitud(puertoSolicitud);
+
+        Translator tareaPrueba = new Translator(EnumTarea.TRANSLATOR, arraySlotEntrada, arraySlotSalida);
 
         cGenerador.generarEntrada();
         tareaPrueba.procesar();
+        puertoSolicitud.leerSolicitud();
         puertoSalida.generarSalida();
-
     }
 }

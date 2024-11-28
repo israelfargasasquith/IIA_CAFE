@@ -45,11 +45,10 @@ public class PuertoEntrada {
             System.out.println("Error Puerto entrada al extraer los nodos: " + ex.getMessage());
         }
         Mensaje nuevo;
-        System.out.println("id PuertoEntrada: "+Integer.parseInt(id.item(0).getTextContent()));
         if (id != null) {
             nuevo = new Mensaje(input, Integer.parseInt(id.item(0).getTextContent()));
         } else {
-            nuevo = new Mensaje(input, -1);
+            nuevo = new Mensaje(input, -1); //esta habra linea habra que quitarla dentro de poco, es para que no pete en algunas situaciones
         }
         slotSalida.addMensaje(nuevo);
     }

@@ -4,7 +4,7 @@
         <SQL>
             SELECT p.precio
             FROM bebidas p
-            WHERE p.name = <xsl:value-of select="//name"/>;
+            WHERE nombre = "<xsl:value-of select="//name"/>";
         </SQL>
     </xsl:template>
 </xsl:stylesheet>
