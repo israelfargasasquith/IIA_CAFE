@@ -10,10 +10,7 @@ import externo.ConectorReceptor;
 import externo.PuertoEntrada;
 import externo.PuertoSalida;
 import java.util.ArrayList;
-import org.w3c.dom.Document;
 import proyecto_iia.tareas.EnumTarea;
-import proyecto_iia.tareas.Splitter;
-import proyecto_iia.tareas.Tarea;
 import proyecto_iia.tareas.Translator;
 
 /**
@@ -32,13 +29,14 @@ public class PrototipoTranslator {
         arraySlotSalida.add(sSalida);
 
         PuertoEntrada puertoEntrada = new PuertoEntrada(sEntrada);
+        puertoEntrada.setQuery("//order_id");
 
         ConectorFicheroGenerador cGenerador = new ConectorFicheroGenerador(puertoEntrada);
         ConectorReceptor cReceptor = new ConectorReceptor();
 
         PuertoSalida puertoSalida = new PuertoSalida(sSalida, cReceptor);
 
-        Tarea tareaPrueba = new Translator(EnumTarea.TRANSLATOR, arraySlotEntrada, arraySlotSalida);
+        Translator tareaPrueba = new Translator(EnumTarea.TRANSLATOR, arraySlotEntrada, arraySlotSalida);
 
         cGenerador.generarEntrada();
         tareaPrueba.procesar();

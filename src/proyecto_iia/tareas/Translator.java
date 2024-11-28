@@ -32,9 +32,13 @@ public class Translator extends Tarea {
     private final TransformerFactory transformerFactory;
     private Transformer transformer;
     private Mensaje mensajeAProcesar;
+    private Slot inputSlot;
+    private Slot outputSlot;
 
     public Translator(EnumTarea t, ArrayList<Slot> se, ArrayList<Slot> sl) {
         super(t, se, sl);
+        inputSlot = se.get(0);
+        outputSlot = sl.get(0);
         dbFactory = DocumentBuilderFactory.newInstance();
         try {
             dBuilder = dbFactory.newDocumentBuilder();
@@ -54,22 +58,26 @@ public class Translator extends Tarea {
 
     @Override
     public void procesar() {
-        while (!this.isEmpty(0)) {
-            mensajeAProcesar = this.getMensajeEntrada(0);
-
+        while (!this.inputSlot.isEmpty()) {
+            mensajeAProcesar = this.inputSlot.getMensaje();
+            int idMensaje = mensajeAProcesar.getIdDocument();
+            int idSegmento = mensajeAProcesar.getIdSegment();
+            int nSegment = mensajeAProcesar.getnSegments();
             DOMResult domResult = new DOMResult();
             DOMSource input = new DOMSource(mensajeAProcesar.getDocument());
 
             try {
-                transformer.transform(input, domResult);
+                transformer.transform(input,domResult);
             } catch (TransformerException ex) {
                 System.out.println("Error en procesarSQL translator: " + ex.getMessage());
             }
 
             Document transformedDoc = (Document) domResult.getNode();
 
-            Mensaje nuevo = new Mensaje(transformedDoc);
-            this.setMensajeSalida(nuevo, 0);
+            System.out.println("Documento transformado: "+transformedDoc.toString());
+            
+            Mensaje nuevo = new Mensaje(transformedDoc, idMensaje, idSegmento, nSegment);
+            this.outputSlot.addMensaje(nuevo);
         }
     }
 

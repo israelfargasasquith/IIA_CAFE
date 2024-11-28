@@ -25,20 +25,29 @@ public class Mensaje {
     private int idSegment;
     private int nSegments;
     private Document document;
-    
 
-    public Mensaje(Document msj) {
-        document = msj;
-        idMsg = UUID.randomUUID().toString();
-        idDocument = 
-        nSegments = 0;
-    }
-
-    public Mensaje(Document msj, int idDocument, int nSegments, int nSegmets) {
+    public Mensaje(Document msj, int idDocument) { //Constructor para el puerto
         document = msj;
         idMsg = UUID.randomUUID().toString();
         this.idDocument = idDocument;
-        this.nSegments = nSegments;
+        idSegment = -1;
+        nSegments = 0;
+    }
+
+    public Mensaje(Document msj, int idDocument, int idSegment, int nSegmets) {//Constructor para splitter
+        document = msj;
+        idMsg = UUID.randomUUID().toString();
+        this.idDocument = idDocument;
+        this.idSegment = idSegment;
+        this.nSegments = nSegmets;
+    }
+
+    public int getIdDocument() {
+        return idDocument;
+    }
+
+    public void setIdDocument(int idDocument) {
+        this.idDocument = idDocument;
     }
 
     public String getIdMsg() {

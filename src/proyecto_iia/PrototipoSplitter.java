@@ -25,9 +25,6 @@ public class PrototipoSplitter {
 
     public static void main(String[] args) throws TransformerConfigurationException, TransformerException {
 
-        
-        Mensaje m = new Mensaje(null);
-        m.setTagName("id_order");
         Slot sEntrada = new Slot();
         Slot sSalida = new Slot();
         ArrayList<Slot> arraySlotEntrada = new ArrayList<>();
@@ -36,6 +33,7 @@ public class PrototipoSplitter {
         arraySlotSalida.add(sSalida);
 
         PuertoEntrada puertoEntrada = new PuertoEntrada(sEntrada);
+        puertoEntrada.setQuery("//order_id");
 
         ConectorFicheroGenerador cGenerador = new ConectorFicheroGenerador(puertoEntrada);
         ConectorReceptor cReceptor = new ConectorReceptor();
@@ -43,7 +41,8 @@ public class PrototipoSplitter {
         PuertoSalida puertoSalida = new PuertoSalida(sSalida, cReceptor);
 
         Splitter tareaPrueba = new Splitter(EnumTarea.SPLITTER, arraySlotEntrada, arraySlotSalida);
-        tareaPrueba.setXPathQuery("//drinks/*");
+        tareaPrueba.setXPathQuerySeparar("//drinks/*");
+        tareaPrueba.setXPathQueryContar("count(cafe_order/drinks/drink)");
 
         cGenerador.generarEntrada();
         tareaPrueba.procesar();

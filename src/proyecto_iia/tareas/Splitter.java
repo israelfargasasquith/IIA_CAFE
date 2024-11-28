@@ -7,6 +7,8 @@ package proyecto_iia.tareas;
 import comun.Mensaje;
 import comun.Slot;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -28,9 +30,9 @@ public class Splitter extends Tarea {
     private DocumentBuilder dBuilder;
     private XPathFactory xfactory;
     private XPath xpath;
-    private String expresionXPathContarMensajes;
-    private String idExpresion;
-    private String xPathQuery;
+    private String xPathQueryContar;
+    private String xPathQuerySeparador;
+    private String xPathIdMensaje;
     private Slot input;
     private Slot output;
 
@@ -51,49 +53,68 @@ public class Splitter extends Tarea {
         xpath = xfactory.newXPath();
     }
 
-    public void setXPathQuery(String nuevo) {
-        this.xPathQuery = nuevo;
+    public void setXPathQuerySeparar(String nuevo) {
+        this.xPathQuerySeparador = nuevo;
     }
 
-    public void setIdExpresion(String nuevo) {
-        this.idExpresion = nuevo;
+    public void setXPathQueryContar(String nuevo) {
+        this.xPathQueryContar = nuevo;
+    }
+
+    public void setxPathIdMensaje(String nuevo) {
+        this.xPathIdMensaje = nuevo;
     }
 
     @Override
     public void procesar() {
-
         Mensaje mensajeAProcesar = this.input.getMensaje();
-        Document doc = mensajeAProcesar.getDocument(); //Obtiene el documento del cuerpo del mensaje
-        NodeList lista = null;
+        Document docASeparar = mensajeAProcesar.getDocument(); //Obtiene el documento del cuerpo del mensaje
+        NodeList listaTodosLosNodos = null;
         try {
-            lista = (NodeList) xpath.compile(xPathQuery).evaluate(doc, XPathConstants.NODESET);
+            listaTodosLosNodos = (NodeList) xpath.compile(xPathQuerySeparador).evaluate(docASeparar, XPathConstants.NODESET);
         } catch (XPathExpressionException ex) {
-            System.out.println("Error splitter al extraer la lista de nodos: " + ex.getMessage());
+            System.out.println("Error splitter al extraer la listaTodosLosNodos de nodos: " + ex.getMessage());
         }
 
-        NodeList order = doc.getElementsByTagName(idExpresion);
-        Node id = order.item(0);
+        int idDocument = mensajeAProcesar.getIdDocument();
+        int nSegmentos = -1;
+        Double tmp = -1.0;
+        try {
+            tmp = (Double) xpath.compile(xPathQueryContar).evaluate(docASeparar, XPathConstants.NUMBER);
+        } catch (XPathExpressionException ex) {
+            System.out.println("Error splitter al extraer el numero de nodos: " + ex.getMessage());
+        }
+        nSegmentos = tmp.intValue();
+        Node id=null;
+        try {
+            id = (Node) xpath.compile(xPathIdMensaje).evaluate(input, XPathConstants.NODESET);
+        } catch (XPathExpressionException ex) {
+            System.out.println("Error splitter al extraer el id order: " + ex.getMessage());
+        }
 
-        int j = 0;
-        if (lista != null) {
-            for (int i = 0; i < lista.getLength(); i++) //Para cada nodo
+        if (listaTodosLosNodos != null && nSegmentos != -1) {
+            System.out.println("Splitter************************");
+
+            for (int i = 0; i < listaTodosLosNodos.getLength(); i++) //Para cada nodo
             {
-                Document doc2 = dBuilder.newDocument();
-                Node b = lista.item(i);
+                Document docExtraido = dBuilder.newDocument();
+                Node base = listaTodosLosNodos.item(i);
+                System.out.println("Nodo base: " + base.getTextContent());
+                if (base.getNodeType() == Node.ELEMENT_NODE) {
 
-                if (b.getNodeType() == Node.ELEMENT_NODE) {
-                    Node nodo = lista.item(i);
+                    Node nodo = listaTodosLosNodos.item(i);
+                    System.out.println("Nodo nodo: " + nodo.getTextContent());
 
                     if (nodo.getNodeType() == Node.ELEMENT_NODE) {
-                        Node TagOrder = doc2.importNode(id, true);
-                        doc2.getDocumentElement().appendChild(TagOrder);
-                        Node copyNode = doc2.importNode(nodo, true);
-                        doc2.appendChild(copyNode);
+                        Node TagOrder = docExtraido.importNode(id, true);
+                        docExtraido.getDocumentElement().appendChild(TagOrder);
+                        Node copyNode = docExtraido.importNode(nodo, true);
+                        docExtraido.appendChild(copyNode);
                     }
                 }
 
-                Mensaje nuevoMensaje = new Mensaje(doc2, mensajeAProcesar.getIdSegment(), i);
-                output.addMensaje(nuevoMensaje); 
+                Mensaje nuevoMensaje = new Mensaje(docExtraido, idDocument, i, nSegmentos);
+                output.addMensaje(nuevoMensaje);
                 System.out.println("Nuevo mensaje" + i + " creado en el splitter y escrito en el slot correspondiente");
             }
         }
