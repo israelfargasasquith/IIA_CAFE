@@ -43,6 +43,7 @@ public class PrototipoSplitter {
         tareaPrueba.setXPathQuerySeparar("//drinks/*");
         tareaPrueba.setXPathQueryContar("count(cafe_order/drinks/drink)");
         tareaPrueba.setxPathIdMensaje("//order_id");
+        tareaPrueba.setRootTag("cafe_order");
 
         cGenerador.generarEntrada();
         tareaPrueba.procesar();

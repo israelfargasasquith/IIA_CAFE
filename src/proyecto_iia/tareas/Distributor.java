@@ -7,6 +7,10 @@ package proyecto_iia.tareas;
 import comun.Mensaje;
 import comun.Slot;
 import java.util.ArrayList;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -33,22 +37,33 @@ public class Distributor extends Tarea {
         this.tagALeer = tagALeer;
     }
 
+    public void setAtributos(String[] Con, int num, String tag) {
+        this.Condiciones = Con;
+        this.NCondiciones = num;
+        this.tagALeer = tag;
+    }
+
     @Override
     public void procesar() {
         //Obtiene el mensaje
         mensaje = getMensajeEntrada(0);   //Solo tiene 1 entrada
         Element typeElement = (Element) mensaje.getDocument().getElementsByTagName(tagALeer).item(0);
 
-        //Comprueba con la condición de cada salida
-        for (int i = 0; i < getNSalidas(); i++) {
-            String typeText = typeElement.getTextContent();
+        XPathFactory xfactory = XPathFactory.newInstance();
+        XPath xpath = xfactory.newXPath();
 
-            //Comprueba si coincide en el mensaje alguna condición
-//            for (int j = 0; j < Condiciones.length; j++) {
-            if (typeText.contains(Condiciones[i])) {
-                super.setMensajeSalida(mensaje, i);
+        for (int i = 0; i < getNSalidas(); i++) {
+            try {
+                String expression = "boolean(" + tagALeer + "[text()='" + Condiciones[i] + "'])";
+
+                boolean result = (boolean) xpath.evaluate(expression, mensaje.getDocument(), XPathConstants.BOOLEAN);
+                if (result) {
+                    System.out.println("Sacando mensaje por salida " + i + " ||| Condicion: " + Condiciones[i]);
+                    setMensajeSalida(mensaje, i);
+                }
+            } catch (XPathExpressionException ex) {
+                System.out.println("Fallo al evaluar la condicion de la salida " + i);
             }
-//            }
         }
     }
 }

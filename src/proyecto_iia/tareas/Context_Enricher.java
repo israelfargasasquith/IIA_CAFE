@@ -14,6 +14,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  *
@@ -22,40 +24,57 @@ import org.w3c.dom.Element;
 public class Context_Enricher extends Tarea {
 
     private String etiqueta;
+    private String etiquetaContex;
     private Mensaje mensaje;
 
-    public Context_Enricher(EnumTarea t, ArrayList<Slot> se, ArrayList<Slot> sl, String etiqueta) {
+    public Context_Enricher(EnumTarea t, ArrayList<Slot> se, ArrayList<Slot> sl, String etiqueta, String etiquetaContex) {
         super(t, se, sl);
         this.etiqueta = etiqueta;
+        this.etiquetaContex = etiquetaContex;
 
+    }
+
+    public void setetiqueta(String e) {
+        this.etiqueta = e;
+    }
+
+    public void setetiquetaContex(String e) { // aÃ±adir al diagrama
+        this.etiquetaContex = e;
     }
 
     @Override
     public void procesar() {
-        mensaje = this.getMensajeEntrada(1);  //usando mensaje como auxiliar
+        mensaje = this.getMensajeEntrada(0);  //usando mensaje como auxiliar, es este, comprobado
+        System.out.println("dentro de procesar: \n" + mensaje.toString());
         Element typeElement = null;
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = null;
         try {
             dBuilder = dbFactory.newDocumentBuilder();
         } catch (ParserConfigurationException ex) {
-            System.out.println("Error en tarea context enricher: " + ex.getMessage());
+            System.out.println("Error en dBuilder de la tarea context enricher : " + ex.getMessage());
         }
-//        Document suppXml = dBuilder.newDocument();
-//        Element root = suppXml.createElement("daIgual");
-//        suppXml.appendChild(root);
+
+        String precio = "";
         try {
-            typeElement = (Element) mensaje.getDocument().getElementsByTagName(etiqueta).item(0); //Obtenos la etiqueta deseada
+            typeElement = (Element) mensaje.getDocument().getElementsByTagName(etiquetaContex).item(0); //Obtenos la etiqueta deseada
         } catch (Exception ex) {
             System.out.println("Error en tarea context enricher: " + ex.getMessage());
         }
-        mensaje = this.getMensajeEntrada(0);//obtenemos el mensaje original
+        mensaje = this.getMensajeEntrada(1);//obtenemos el mensaje original
+        System.out.println(mensaje.getDocument().toString());
         Element rootMensaje = mensaje.getDocument().getDocumentElement();
-//      Document pepe = mensaje.getDocument();
-//      pepe.appendChild(root);
+        precio = typeElement.getTextContent();
+
+        System.out.println("Precio: " + precio);
+        typeElement.setTextContent(precio);
         if (typeElement != null) {
             try {
-                rootMensaje.appendChild(typeElement);  //añadimos la etiqueta al mensaje original
+                NodeList ListaNodos = mensaje.getDocument().getElementsByTagName(etiqueta);
+                Node Nodo1 = ListaNodos.item(0);
+                Node importado = mensaje.getDocument().importNode(typeElement, true);
+                Nodo1.appendChild(importado);
+
             } catch (Exception ex) {
                 System.out.println("Error en tarea context enricher: " + ex.getMessage());
             }

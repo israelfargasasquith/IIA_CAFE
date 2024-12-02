@@ -7,8 +7,6 @@ package proyecto_iia.tareas;
 import comun.Mensaje;
 import comun.Slot;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -17,6 +15,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -35,6 +34,7 @@ public class Splitter extends Tarea {
     private String xPathIdMensaje;
     private Slot input;
     private Slot output;
+    private String rootTag;
 
     public Splitter(EnumTarea t, ArrayList<Slot> se, ArrayList<Slot> sl) {
         super(t, se, sl);
@@ -64,6 +64,10 @@ public class Splitter extends Tarea {
     public void setxPathIdMensaje(String nuevo) {
         this.xPathIdMensaje = nuevo;
     }
+    
+    public  void setRootTag(String rootTag){
+        this.rootTag = rootTag;
+    }
 
     @Override
     public void procesar() {
@@ -85,9 +89,9 @@ public class Splitter extends Tarea {
             System.out.println("Error splitter al extraer el numero de nodos: " + ex.getMessage());
         }
         nSegmentos = tmp.intValue();
-        Node id=null;
+        Node id = null;
         try {
-            id = (Node) xpath.compile(xPathIdMensaje).evaluate(input, XPathConstants.NODESET);
+            id = (Node) xpath.compile(xPathIdMensaje).evaluate(docASeparar, XPathConstants.NODE);
         } catch (XPathExpressionException ex) {
             System.out.println("Error splitter al extraer el id order: " + ex.getMessage());
         }
@@ -98,20 +102,16 @@ public class Splitter extends Tarea {
             for (int i = 0; i < listaTodosLosNodos.getLength(); i++) //Para cada nodo
             {
                 Document docExtraido = dBuilder.newDocument();
-                Node base = listaTodosLosNodos.item(i);
-                System.out.println("Nodo base: " + base.getTextContent());
-                if (base.getNodeType() == Node.ELEMENT_NODE) {
+                Element root = docExtraido.createElement(rootTag);
+                docExtraido.appendChild(root);
+                Node nodo = listaTodosLosNodos.item(i);
+                System.out.println("Nodo a insertar: " + nodo.getTextContent());
 
-                    Node nodo = listaTodosLosNodos.item(i);
-                    System.out.println("Nodo nodo: " + nodo.getTextContent());
+                Node importedId = docExtraido.importNode(id, true);
+                root.appendChild(importedId);
 
-                    if (nodo.getNodeType() == Node.ELEMENT_NODE) {
-                        Node TagOrder = docExtraido.importNode(id, true);
-                        docExtraido.getDocumentElement().appendChild(TagOrder);
-                        Node copyNode = docExtraido.importNode(nodo, true);
-                        docExtraido.appendChild(copyNode);
-                    }
-                }
+                Node imported = docExtraido.importNode(nodo, true);
+                root.appendChild(imported);
 
                 Mensaje nuevoMensaje = new Mensaje(docExtraido, idDocument, i, nSegmentos);
                 output.addMensaje(nuevoMensaje);

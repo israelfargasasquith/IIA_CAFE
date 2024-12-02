@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <cafe_subOrder>
     <cafe_subOrder>
         <order_id>1</order_id>
@@ -5,6 +6,7 @@
             <drink>
                 <name>cafe</name>
                 <type>hot</type>
+                <price>20</price>
             </drink>
         </drinks>
     </cafe_subOrder>

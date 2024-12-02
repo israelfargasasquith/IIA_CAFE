@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<cafe_order>
+    <order_id>1</order_id>
+    <drink>
+                    
+        <name>coca-cola</name>
+                    
+        <type>cold</type>
+        
+        <price>1.50</price>
+                
+    </drink>
+</cafe_order>

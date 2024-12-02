@@ -1,10 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <cafe_subOrder>
     <cafe_subOrder>
         <order_id>1</order_id>
         <drinks>
             <drink>
                 <name>cafe</name>
-                <type>hot</type>
             </drink>
         </drinks>
     </cafe_subOrder>

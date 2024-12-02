@@ -4,26 +4,74 @@
  */
 package proyecto_iia.tareas;
 
+import comun.Mensaje;
 import comun.Slot;
 import java.util.ArrayList;
 import proyecto_iia.tareas.Tarea;
-import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  *
  * @author israe
  */
+public class Correlator extends Tarea {
 
+    private Mensaje mensaje1;
+    private Mensaje mensaje2;
+    String nombreetiqueta;
 
-public class Correlator extends Tarea{
-
-    public Correlator(EnumTarea t, ArrayList<Slot> se, ArrayList<Slot> sl) {
+    public Correlator(EnumTarea t, ArrayList<Slot> se, ArrayList<Slot> sl, String et) {
         super(t, se, sl);
+
+        this.nombreetiqueta = et;
     }
-    
+
+    public void setEtiqueta(String e) {// aÃ±adir a diagrama 
+        this.nombreetiqueta = e;
+    }
+
     @Override
-    public void procesar() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void procesar() {// estructura del context enricher pero hay que modificar 
+
+        mensaje1 = this.getMensajeEntrada(0);  // Usamos mensaje como auxiliar para el primer mensaje
+        mensaje2 = this.getMensajeEntrada(1);  // Usamos mensaje como auxiliar para el segundo mensaje
+
+        if (mensaje1 == null) {
+            System.out.println("Mensaje 1 es NULO");
+        }
+        if (mensaje2 == null) {
+            System.out.println("Mensaje 2 es NULO");
+        }
+
+        // Declaramos las variables para las etiquetas order_id
+        String orderId1 = "";
+        String orderId2 = "";
+
+        // Obtenemos la etiqueta order_id del primer mensaje
+        try {
+            Element typeElement = (Element) mensaje1.getDocument().getElementsByTagName(nombreetiqueta).item(0); // Obtenemos la etiqueta order_id
+            orderId1 = typeElement.getTextContent();
+        } catch (Exception ex) {
+            System.out.println("Error al obtener order_id del primer mensaje: " + ex.getMessage());
+        }
+        // Obtenemos la etiqueta order_id del segundo mensaje
+        try {
+            Element typeElement2 = (Element) mensaje2.getDocument().getElementsByTagName(nombreetiqueta).item(0); // Obtenemos la etiqueta order_id
+            orderId2 = typeElement2.getTextContent();
+        } catch (Exception ex) {
+            System.out.println("Error al obtener order_id del segundo mensaje: " + ex.getMessage());
+        }
+
+        // Comparamos los valores de order_id
+        if (!orderId1.equalsIgnoreCase("") && !orderId2.equalsIgnoreCase("") && orderId1.equals(orderId2)) {
+            // Si ambos order_id son iguales, enrutar los mensajes
+            this.setMensajeSalida(mensaje1, 0);  // Mensaje 1 por la salida 0
+            this.setMensajeSalida(mensaje2, 1);  // Mensaje 2 por la salida 1
+        } else {
+            // Si los order_id no son iguales, no hacer nada o manejar el error
+            System.out.println("Los order_id no coinciden. No se enrutan los mensajes.");
+        }
+
     }
-    
+
 }

@@ -7,7 +7,6 @@ package proyecto_iia;
 import comun.Mensaje;
 import comun.Slot;
 import externo.ConectorReceptor;
-import externo.PuertoEntrada;
 import externo.PuertoSalida;
 import java.io.File;
 import java.io.IOException;
@@ -17,48 +16,56 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
+import proyecto_iia.tareas.Context_Enricher;
+import proyecto_iia.tareas.Correlator;
 import proyecto_iia.tareas.EnumTarea;
-import proyecto_iia.tareas.Replicator;
 
 /**
  *
  * @author israe
  */
-public class PrototipoReplicator {
+public class PrototipoCorrelator {
 
-    
     public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
-        //BORRAR LOS GENERATED OUTPUT ANTES DE HACER ALGUNA EJECUCION, ASI VEMOS QUE SE GENERAN NUEVOS
-        System.out.println("Jose's main");
+
+        System.out.println("Sebas' Correlator main");
         Slot sEntrada = new Slot();
+        Slot sEntrada2 = new Slot();
         Slot sSalida2 = new Slot();
         Slot sSalida = new Slot();
         ArrayList<Slot> arraySlotEntrada = new ArrayList<>();
         ArrayList<Slot> arraySlotSalida = new ArrayList<>();
-        
-        
-        
+
         arraySlotEntrada.add(sEntrada);
-        arraySlotSalida.add(sSalida);
+        arraySlotEntrada.add(sEntrada2);
         arraySlotSalida.add(sSalida2);
+        arraySlotSalida.add(sSalida);
 
-        ConectorReceptor cReceptor = new ConectorReceptor();
-        PuertoSalida puertoSalida = new PuertoSalida(sSalida, cReceptor);
-        PuertoSalida puertoSalida2 = new PuertoSalida(sSalida2, cReceptor);
+        ConectorReceptor cExSalida = new ConectorReceptor();
 
-        
-        Replicator tareaPrueba = new Replicator(EnumTarea.REPLICATOR, arraySlotEntrada, arraySlotSalida);
+        Correlator tareaPrueba = new Correlator(EnumTarea.CORRELATOR, arraySlotEntrada, arraySlotSalida, "order_id");
+        PuertoSalida puertoSalida = new PuertoSalida(sSalida, cExSalida); //quitar null
+        PuertoSalida puertoSalida2 = new PuertoSalida(sSalida2, cExSalida);
 
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-        File prueba = new File(System.getProperty("user.dir") + File.separator + "src" + File.separator + "orders" + File.separator + "MensajePruebaDistributor.xml");
+        File prueba = new File(System.getProperty("user.dir") + File.separator + "src" + File.separator + "orders" + File.separator + "MensajePruebaCorrelatorPrecio.xml");
         Document doc = dBuilder.parse(prueba);
-        Mensaje tmp1 = new Mensaje(doc,1);
-        
+
+        Mensaje tmp1 = new Mensaje(doc, 1);
+        System.out.println(tmp1.toString());
+
+        File prueba2 = new File(System.getProperty("user.dir") + File.separator + "src" + File.separator + "orders" + File.separator + "MensajePruebaAgregator.xml");
+        Document doc2 = dBuilder.parse(prueba2);
+//        doc = dBuilder.parse(new File(System.getProperty("user.dir") + File.separator + "src" + File.separator + "orders" + File.separator + "mensajebody.xml"));
+        Mensaje tmp2 = new Mensaje(doc2, 1);
+
+        System.out.println(tmp2.toString());
+
         sEntrada.addMensaje(tmp1);
+        sEntrada2.addMensaje(tmp2);
         tareaPrueba.procesar();
         puertoSalida.generarSalida();
         puertoSalida2.generarSalida();
-
     }
 }
