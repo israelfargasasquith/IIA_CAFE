@@ -25,6 +25,10 @@ public class ConectorFicheroGenerador {
         this.puertoEntrada = puertoEntrada;
     }
 
+    public void setPuertoEntrada(PuertoEntrada puertoEntrada) {
+        this.puertoEntrada = puertoEntrada;
+    }
+
     public void generarEntrada() {
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = null;
@@ -41,7 +45,7 @@ public class ConectorFicheroGenerador {
             //doc = dBuilder.parse(new File(System.getProperty("user.dir") + File.separator + "src" + File.separator + "orders"+File.separator+"order"+randomInt+".xml")); //El bueno para cafe
             //doc = dBuilder.parse(new File(System.getProperty("user.dir") + File.separator + "src" + File.separator + "orders" + File.separator + "MensajePruebaTranslator.xml")); //Fichero prueba Translator
             doc = dBuilder.parse(new File(System.getProperty("user.dir") + File.separator + "src" + File.separator + "orders" + File.separator + "order1.xml")); //prueba Splitter
-            
+
         } catch (SAXException ex) {
             System.out.println("Error al generar la entrada Parse: " + ex.getMessage());
             System.exit(1);

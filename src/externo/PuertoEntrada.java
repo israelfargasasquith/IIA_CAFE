@@ -28,6 +28,10 @@ public class PuertoEntrada {
         xPath = XPathFactory.newInstance().newXPath();
     }
 
+    public void setSlotSalida(Slot slotSalida) {
+        this.slotSalida = slotSalida;
+    }
+
     public String getXPathQuery() { //nuevo
         return query;
     }

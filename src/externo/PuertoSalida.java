@@ -21,6 +21,16 @@ public class PuertoSalida {
         this.conectorReceptor = conectorReceptor;
     }
 
+    public void setSlotEntrada(Slot slotEntrada) {
+        this.slotEntrada = slotEntrada;
+    }
+
+    public void setConectorReceptor(ConectorReceptor conectorReceptor) {
+        this.conectorReceptor = conectorReceptor;
+    }
+    
+    
+
     public void generarSalida() {
         while (!slotEntrada.isEmpty()) {
             Mensaje tmp = slotEntrada.getMensaje();

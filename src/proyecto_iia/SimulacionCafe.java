@@ -44,7 +44,7 @@ public class SimulacionCafe {
         sSalidaSplitter.add(slotSalidaSplitter);
 
 //       Slot slotEntradaDistributor = new Slot(); La de arriba
-        Slot slotSalidaDistributor1 = new Slot();
+        Slot slotSalidaDistributor1 = new Slot();  //Los slots 1 y 2 son los bifurcan en caminos *ver diagrama* en este caso uno va arriba y otro abajo
         Slot slotSalidaDistributor2 = new Slot();
         ArrayList<Slot> sSalidaDistributor = new ArrayList<>();
         sSalidaDistributor.add(slotSalidaDistributor1);
@@ -52,14 +52,14 @@ public class SimulacionCafe {
 
 //       Slot slotEntradaReplicator1 = new Slot(); Las de arriba
 //       Slot slotEntradaReplicator2 = new Slot();
-        Slot slotSalidaReplicator1A = new Slot();
+        Slot slotSalidaReplicator1A = new Slot(); //Slot del camino "superior" que vuelve a bifurcar en dos caminos A para el traductor y B para el correlator
         Slot slotSalidaReplicator1B = new Slot();
-        Slot slotSalidaReplicator2A = new Slot();
+        Slot slotSalidaReplicator2A = new Slot(); //Slot del camino "inferior" que vuelve a bifurcar en dos caminos A para el traductor y B para el correlator
         Slot slotSalidaReplicator2B = new Slot();
-        ArrayList<Slot> sSalidaReplicator1 = new ArrayList<>();
+        ArrayList<Slot> sSalidaReplicator1 = new ArrayList<>(); //Este arrayList son las salidas del replicator "superior"
         sSalidaReplicator1.add(slotSalidaReplicator1A);
         sSalidaReplicator1.add(slotSalidaReplicator1B);
-        ArrayList<Slot> sSalidaReplicator2 = new ArrayList<>();
+        ArrayList<Slot> sSalidaReplicator2 = new ArrayList<>(); //Este arrayList son las salidas del replicator "inferior"
         sSalidaReplicator2.add(slotSalidaReplicator2B);
         sSalidaReplicator2.add(slotSalidaReplicator2A);
 
@@ -141,19 +141,104 @@ public class SimulacionCafe {
          */
         CreadorConcretoTarea tareaFactory = new CreadorConcretoTarea();
 
-        Splitter splitter = (Splitter) tareaFactory.Factory_Method(EnumTarea.SPLITTER, null, null);
-        Distributor distributor = (Distributor) tareaFactory.Factory_Method(EnumTarea.DISTRIBUTOR, null, null);
-        Replicator replicator1 = (Replicator) tareaFactory.Factory_Method(EnumTarea.REPLICATOR, null, null);
-        Replicator replicator2 = (Replicator) tareaFactory.Factory_Method(EnumTarea.REPLICATOR, null, null);
-        Translator translator1 = (Translator) tareaFactory.Factory_Method(EnumTarea.TRANSLATOR, null, null);
-        Translator translator2 = (Translator) tareaFactory.Factory_Method(EnumTarea.TRANSLATOR, null, null);
-        Correlator correlator1 = (Correlator) tareaFactory.Factory_Method(EnumTarea.CORRELATOR, null, null);
-        Correlator correlator2 = (Correlator) tareaFactory.Factory_Method(EnumTarea.CORRELATOR, null, null);
-        Context_Enricher context_Enricher1 = (Context_Enricher) tareaFactory.Factory_Method(EnumTarea.CONTEXT_ENRICHER, null, null);
-        Context_Enricher context_Enricher2 = (Context_Enricher) tareaFactory.Factory_Method(EnumTarea.CONTEXT_ENRICHER, null, null);
-        Merger merger = (Merger) tareaFactory.Factory_Method(EnumTarea.MERGER, null, null);
-        Agregator agregator = (Agregator) tareaFactory.Factory_Method(EnumTarea.AGREGATOR, null, null);
+        Splitter splitter = (Splitter) tareaFactory.Factory_Method(EnumTarea.SPLITTER, sEntradaSplitter, sSalidaSplitter);
+        Distributor distributor = (Distributor) tareaFactory.Factory_Method(EnumTarea.DISTRIBUTOR, sSalidaSplitter, sSalidaDistributor);
+        Replicator replicator1 = (Replicator) tareaFactory.Factory_Method(EnumTarea.REPLICATOR, sSalidaDistributor, sSalidaReplicator1); //PROBLEMA CUANDO LEAN DEL MISMO ARRAY
+        Replicator replicator2 = (Replicator) tareaFactory.Factory_Method(EnumTarea.REPLICATOR, sSalidaDistributor, sSalidaReplicator2);//PROBLEMA CUANDO LEAN DEL MISMO
+        Translator translator1 = (Translator) tareaFactory.Factory_Method(EnumTarea.TRANSLATOR, sSalidaReplicator1, sSalidaTraductor1);
+        Translator translator2 = (Translator) tareaFactory.Factory_Method(EnumTarea.TRANSLATOR, sSalidaReplicator2, sSalidaTraductor2);
+        Correlator correlator1 = (Correlator) tareaFactory.Factory_Method(EnumTarea.CORRELATOR, sSalidaReplicator1, sSalidaCorrelator1); //PROBLEMA COMO ASIGNAR LOS SLOTS 
+        Correlator correlator2 = (Correlator) tareaFactory.Factory_Method(EnumTarea.CORRELATOR, sSalidaReplicator2, sSalidaCorrelator2); //El problema es que hay que añadir entonces el slot del puerto solicitud que es el sEntradaCorrelator1 y 2 segun corresponda. La solucion puede hacerse de varias formas, hablar para ver que hacemos
+        Context_Enricher context_Enricher1 = (Context_Enricher) tareaFactory.Factory_Method(EnumTarea.CONTEXT_ENRICHER, sSalidaCorrelator1, sSalidaContentEnricher1);
+        Context_Enricher context_Enricher2 = (Context_Enricher) tareaFactory.Factory_Method(EnumTarea.CONTEXT_ENRICHER, sSalidaCorrelator2, sSalidaContentEnricher2);
+        Merger merger = (Merger) tareaFactory.Factory_Method(EnumTarea.MERGER, sSalidaContentEnricher1, sSalidaMerger); //PROBLEMA ASIGNACION DE SLOTS, se asigna un solo array y este debe contener tambien el slot del otro camino
+        Agregator agregator = (Agregator) tareaFactory.Factory_Method(EnumTarea.AGREGATOR, sSalidaMerger, sSalidaAgregator);
 
+        /*
+        ***************************************************************
+        ************ ASIGNACION DE CONECTORES**************
+        ***************************************************************
+         */
+        cGenerador.setPuertoEntrada(pEntrada);
+        cSolicitud1.setPuertoSolicitud(pSolicitud1);
+
+        /*
+        ***************************************************************
+        ************ ASIGNACION DE PUERTOS Y PARAMETROS **************
+        ***************************************************************
+         */
+        pEntrada.setSlotSalida(slotEntradaSplitter);
+        pEntrada.setQuery("//order_id");
+
+        pSolicitud1.setcBD(cSolicitud1);
+        pSolicitud1.setsEntrada(slotSalidaTraductor1);
+        pSolicitud1.setsSalida(slotEntradaCorrelator1B);
+
+        pSolicitud2.setcBD(cSolicitud1);
+        pSolicitud2.setsEntrada(slotSalidaTraductor2);
+        pSolicitud2.setsSalida(slotEntradaCorrelator2B);
+
+        pSalida.setConectorReceptor(cReceptor);
+        pSalida.setSlotEntrada(slotSalidaAgregator);
+        /*
+        ***************************************************************
+        ************ ASIGNACION DE PARAMETROS TAREAS**************
+        ***************************************************************
+         */
+
+        splitter.setXPathQuerySeparar("//drinks/*");
+        splitter.setXPathQueryContar("count(cafe_order/drinks/drink)");
+        splitter.setxPathIdMensaje("//order_id");
+        splitter.setRootTag("cafe_order");
+
+        String[] condiciones = {"cold", "hot"};
+        distributor.setAtributos(condiciones, 2, "//type");
+
+        correlator1.setEtiqueta("order_id");
+        correlator2.setEtiqueta("order_id");
+
+        context_Enricher1.setetiqueta("drink");
+        context_Enricher1.setetiquetaContex("price");
+        context_Enricher2.setetiqueta("drink");
+        context_Enricher2.setetiquetaContex("price");
+
+        agregator.setxPathQueryInfo1("//name");
+        agregator.setxPathQueryInfo2("//type");
+        agregator.setxPathQueryInfo3("//price");
+
+        agregator.setRootTag("cafe_order");
+        agregator.setIdTag("order_id");
+        agregator.setGroupTag("drinks");
+        agregator.setGroupItemTag("drink");
+
+        agregator.setInfo1Tag("name");
+        agregator.setInfo2Tag("type");
+        agregator.setInfo3Tag("price");
+
+        /*
+        ***************************************************************
+        ************ SIMULACION CAFE **************
+        ***************************************************************
+         */
+        cGenerador.generarEntrada();
+        //puertoEntrada es llamado por el generador
+        splitter.procesar();
+        distributor.procesar();
+        replicator1.procesar();
+        replicator2.procesar();
+        translator1.procesar();
+        translator2.procesar();
+        pSolicitud1.leerSolicitud();
+        pSolicitud2.leerSolicitud();
+        //El conector de BD escribe en el puerto de forma automatica despues de la consulta
+        correlator1.procesar();
+        correlator2.procesar();
+        context_Enricher1.procesar();
+        context_Enricher2.procesar();
+        merger.procesar();
+        agregator.procesar();
+        pSalida.generarSalida();
+        //El mismo puerto de salida es el que llama al conector receptor
     }
 
 }
