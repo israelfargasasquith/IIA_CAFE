@@ -47,15 +47,16 @@ public class PrototipoAgregator {
         PuertoSalida puertoSalida = new PuertoSalida(sSalida, cReceptor);
 
         Agregator tareaPrueba = new Agregator(EnumTarea.AGREGATOR, arraySlotEntrada, arraySlotSalida);
-        
+
         tareaPrueba.setxPathQueryInfo1("//name");
         tareaPrueba.setxPathQueryInfo2("//type");
         tareaPrueba.setxPathQueryInfo3("//price");
-        
+
         tareaPrueba.setRootTag("cafe_order");
         tareaPrueba.setIdTag("order_id");
         tareaPrueba.setGroupTag("drinks");
-        
+        tareaPrueba.setGroupItemTag("drink");
+
         tareaPrueba.setInfo1Tag("name");
         tareaPrueba.setInfo2Tag("type");
         tareaPrueba.setInfo3Tag("price");

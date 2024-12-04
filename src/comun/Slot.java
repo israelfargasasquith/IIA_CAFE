@@ -12,25 +12,27 @@ import java.util.Queue;
  * @author israe
  */
 public class Slot {
+
     private final Queue<Mensaje> colaMensajes;
-    
-    public Slot(){
+
+    public Slot() {
         colaMensajes = new LinkedList<>();
     }
-    
-    public void addMensaje(Mensaje msj){
+
+    public void addMensaje(Mensaje msj) {
+        System.out.println("Añadido  mensaje con id = " + msj.getIdMsg() + " idDocument = " + msj.getIdDocument() + " idSegment = " + msj.getIdSegment() + " nSegments = " + msj.getnSegments());
         colaMensajes.add(msj);
     }
-    
-    public Mensaje getMensaje(){
+
+    public Mensaje getMensaje() {
         return colaMensajes.remove();
     }
-    
-    public boolean isEmpty(){
+
+    public boolean isEmpty() {
         return colaMensajes.isEmpty();
     }
-    
-    public int nMensajes(){
+
+    public int nMensajes() {
         return colaMensajes.size();
     }
 }

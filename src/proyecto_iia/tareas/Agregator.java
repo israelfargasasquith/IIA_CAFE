@@ -31,6 +31,7 @@ public class Agregator extends Tarea { //XD
     private String rootTag;
     private String idTag;
     private String groupTag;
+    private String groupItemTag;
     private String info1Tag;
     private String info2Tag;
     private String info3Tag;
@@ -98,15 +99,21 @@ public class Agregator extends Tarea { //XD
         this.groupTag = groupTag;
     }
 
+    public void setGroupItemTag(String groupItemTag) {
+        this.groupItemTag = groupItemTag;
+    }
+
     @Override
     public void procesar() {
         ArrayList<Mensaje> lMensajesEntrada = new ArrayList<>();
         while (!this.input.isEmpty()) {
-            lMensajesEntrada.add(input.getMensaje());
+            Mensaje msj = input.getMensaje();
+            System.out.println("Añadido  mensaje al arrayList con id = " + msj.getIdMsg() + " idDocument = " + msj.getIdDocument() + " idSegment = " + msj.getIdSegment() + " nSegments = " + msj.getnSegments());
+            lMensajesEntrada.add(msj);
         }
 
         Mensaje tmp = lMensajesEntrada.getFirst();
-        System.out.println("El mensaje " + tmp.getIdDocument() + "espera " + tmp.getnSegments() + " nSegmentos");
+        System.out.println("El mensaje " + tmp.getIdDocument() + " espera " + (tmp.getnSegments() + 1) + " nSegmentos");
 
         Document docUnido = dBuilder.newDocument();
         Element rootElement = docUnido.createElement(rootTag);
@@ -122,7 +129,9 @@ public class Agregator extends Tarea { //XD
 
         // int nSegmentos = tmp.getnSegments();
         for (Mensaje mensaje : lMensajesEntrada) {
-            System.out.println("Se va a procesar el mensaje " + mensaje.getIdSegment() + " de los " + mensaje.getnSegments() + " segmentos");
+            Element groupItem = docUnido.createElement(groupItemTag);
+            group.appendChild(groupItem);
+            System.out.println("Se va a procesar el mensaje " + mensaje.getIdSegment() + " de los " + (mensaje.getnSegments() + 1) + " segmentos");
             NodeList listaInfo1 = null;
             try {
                 listaInfo1 = (NodeList) xpath.compile(xPathQueryInfo1).evaluate(mensaje.getDocument(), XPathConstants.NODESET);
@@ -149,17 +158,17 @@ public class Agregator extends Tarea { //XD
             Element itemInfo1 = docUnido.createElement(info1Tag);
             Text nodeInfo1Value = docUnido.createTextNode(info1);
             itemInfo1.appendChild(nodeInfo1Value);
-            group.appendChild(itemInfo1);
+            groupItem.appendChild(itemInfo1);
 
             Element itemInfo2 = docUnido.createElement(info2Tag);
             Text nodeInfo2Value = docUnido.createTextNode(info2);
             itemInfo2.appendChild(nodeInfo2Value);
-            group.appendChild(itemInfo2);
+            groupItem.appendChild(itemInfo2);
 
             Element itemInfo3 = docUnido.createElement(info3Tag);
             Text nodeInfo3Value = docUnido.createTextNode(info3);
-            itemInfo1.appendChild(nodeInfo3Value);
-            group.appendChild(itemInfo3);
+            itemInfo3.appendChild(nodeInfo3Value);
+            groupItem.appendChild(itemInfo3);
         }
 
         Mensaje unido = new Mensaje(docUnido, tmp.getIdDocument());
@@ -169,9 +178,7 @@ public class Agregator extends Tarea { //XD
 
 }
 
-
-
-        /*//primera iteracion fuera del bucle porque ya la hemos sacado
+/*//primera iteracion fuera del bucle porque ya la hemos sacado
         Document docTmp = tmp.getDocument();
 
         NodeList listaInfo1 = null;

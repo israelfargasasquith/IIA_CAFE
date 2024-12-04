@@ -27,19 +27,22 @@ public class Mensaje {
     private Document document;
 
     public Mensaje(Document msj, int idDocument) { //Constructor para el puerto
-        document = msj;
-        idMsg = UUID.randomUUID().toString();
+        this.document = msj;
+        this.idMsg = UUID.randomUUID().toString();
         this.idDocument = idDocument;
-        idSegment = -1;
-        nSegments = 0;
+        this.idSegment = -1;
+        this.nSegments = 0;
+        System.out.println("Generado mensaje con id = " + this.idMsg + " idDocument = " + this.idDocument + " idSegment = " + this.idSegment + " nSegments = " + this.nSegments);
+
     }
 
     public Mensaje(Document msj, int idDocument, int idSegment, int nSegmets) {//Constructor para splitter
-        document = msj;
-        idMsg = UUID.randomUUID().toString();
+        this.document = msj;
+        this.idMsg = UUID.randomUUID().toString();
         this.idDocument = idDocument;
         this.idSegment = idSegment;
         this.nSegments = nSegmets;
+        System.out.println("Generado mensaje con id = " + this.idMsg + " idDocument = " + this.idDocument + " idSegment = " + this.idSegment + " nSegments = " + this.nSegments);
     }
 
     public int getIdDocument() {
@@ -59,11 +62,11 @@ public class Mensaje {
     }
 
     public int getIdSegment() {
-        return idDocument;
+        return idSegment;
     }
 
-    public void setIdSegment(int idDocument) {
-        this.idDocument = idDocument;
+    public void setIdSegment(int idSegment) {
+        this.idSegment = idSegment;
     }
 
     public int getnSegments() {
