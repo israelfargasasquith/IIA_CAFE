@@ -30,6 +30,8 @@ public class Replicator extends Tarea {
             //Lo coloca en las salidas
             for (int i = 0; i < this.getNSalidas(); i++) {
                 this.setMensajeSalida(mensaje, i);
+                System.out.println("\nReplicator Mensaje: IDMsg -> "+mensaje.getIdMsg() +"   IDDocument: "+ mensaje.getIdDocument());
+                System.out.println(mensaje.toString()+"\n");
             }
         }
     }

@@ -45,24 +45,26 @@ public class Distributor extends Tarea {
 
     @Override
     public void procesar() {
-        //Obtiene el mensaje
-        mensaje = getMensajeEntrada(0);   //Solo tiene 1 entrada
-        Element typeElement = (Element) mensaje.getDocument().getElementsByTagName(tagALeer).item(0);
+        while (!this.isEmpty(0)) {
+            //Obtiene el mensaje
+            mensaje = getMensajeEntrada(0);   //Solo tiene 1 entrada
+            Element typeElement = (Element) mensaje.getDocument().getElementsByTagName(tagALeer).item(0);
 
-        XPathFactory xfactory = XPathFactory.newInstance();
-        XPath xpath = xfactory.newXPath();
+            XPathFactory xfactory = XPathFactory.newInstance();
+            XPath xpath = xfactory.newXPath();
 
-        for (int i = 0; i < getNSalidas(); i++) {
-            try {
-                String expression = "boolean(" + tagALeer + "[text()='" + Condiciones[i] + "'])";
+            for (int i = 0; i < getNSalidas(); i++) {
+                try {
+                    String expression = "boolean(" + tagALeer + "[text()='" + Condiciones[i] + "'])";
 
-                boolean result = (boolean) xpath.evaluate(expression, mensaje.getDocument(), XPathConstants.BOOLEAN);
-                if (result) {
-                    System.out.println("Sacando mensaje por salida " + i + " ||| Condicion: " + Condiciones[i]);
-                    setMensajeSalida(mensaje, i);
+                    boolean result = (boolean) xpath.evaluate(expression, mensaje.getDocument(), XPathConstants.BOOLEAN);
+                    if (result) {
+                        System.out.println("Sacando mensaje por4 salida " + i + " ||| Condicion: " + Condiciones[i]);
+                        setMensajeSalida(mensaje, i);
+                    }
+                } catch (XPathExpressionException ex) {
+                    System.out.println("Fallo al evaluar la condicion de la salida " + i);
                 }
-            } catch (XPathExpressionException ex) {
-                System.out.println("Fallo al evaluar la condicion de la salida " + i);
             }
         }
     }

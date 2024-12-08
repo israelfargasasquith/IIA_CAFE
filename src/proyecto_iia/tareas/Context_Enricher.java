@@ -44,44 +44,48 @@ public class Context_Enricher extends Tarea {
 
     @Override
     public void procesar() {
-        mensaje = this.getMensajeEntrada(0);  //usando mensaje como auxiliar, es este, comprobado
-        System.out.println("dentro de procesar: \n" + mensaje.toString());
-        Element typeElement = null;
-        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder dBuilder = null;
-        try {
-            dBuilder = dbFactory.newDocumentBuilder();
-        } catch (ParserConfigurationException ex) {
-            System.out.println("Error en dBuilder de la tarea context enricher : " + ex.getMessage());
-        }
-
-        String precio = "";
-        try {
-            typeElement = (Element) mensaje.getDocument().getElementsByTagName(etiquetaContex).item(0); //Obtenos la etiqueta deseada
-        } catch (Exception ex) {
-            System.out.println("Error en tarea context enricher: " + ex.getMessage());
-        }
-        mensaje = this.getMensajeEntrada(1);//obtenemos el mensaje original
-        System.out.println(mensaje.getDocument().toString());
-        Element rootMensaje = mensaje.getDocument().getDocumentElement();
-        precio = typeElement.getTextContent();
-
-        System.out.println("Precio: " + precio);
-        typeElement.setTextContent(precio);
-        if (typeElement != null) {
+        System.out.println("ContextEnricher: Entrada 0 Vacia: " + this.isEmpty(0));
+        System.out.println("ContextEnricher: Entrada 1 Vacia: " + this.isEmpty(1));
+        while (!this.isEmpty(0) && !this.isEmpty(1)) {
+            mensaje = this.getMensajeEntrada(0);  //usando mensaje como auxiliar, es este, comprobado
+            System.out.println("dentro de procesar: \n" + mensaje.toString());
+            Element typeElement = null;
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = null;
             try {
-                NodeList ListaNodos = mensaje.getDocument().getElementsByTagName(etiqueta);
-                Node Nodo1 = ListaNodos.item(0);
-                Node importado = mensaje.getDocument().importNode(typeElement, true);
-                Nodo1.appendChild(importado);
+                dBuilder = dbFactory.newDocumentBuilder();
+            } catch (ParserConfigurationException ex) {
+                System.out.println("Error en dBuilder de la tarea context enricher : " + ex.getMessage());
+            }
 
+            String precio = "";
+            try {
+                typeElement = (Element) mensaje.getDocument().getElementsByTagName(etiquetaContex).item(0); //Obtenos la etiqueta deseada
             } catch (Exception ex) {
                 System.out.println("Error en tarea context enricher: " + ex.getMessage());
             }
-        } else {
-            System.out.println("Error al inizializar el typeElement");
+            mensaje = this.getMensajeEntrada(1);//obtenemos el mensaje original
+            System.out.println(mensaje.getDocument().toString());
+            Element rootMensaje = mensaje.getDocument().getDocumentElement();
+            precio = typeElement.getTextContent();
+
+            System.out.println("Precio: " + precio);
+            typeElement.setTextContent(precio);
+            if (typeElement != null) {
+                try {
+                    NodeList ListaNodos = mensaje.getDocument().getElementsByTagName(etiqueta);
+                    Node Nodo1 = ListaNodos.item(0);
+                    Node importado = mensaje.getDocument().importNode(typeElement, true);
+                    Nodo1.appendChild(importado);
+
+                } catch (Exception ex) {
+                    System.out.println("Error en tarea context enricher: " + ex.getMessage());
+                }
+            } else {
+                System.out.println("Error al inizializar el typeElement");
+            }
+            this.setMensajeSalida(mensaje, 0);
         }
-        this.setMensajeSalida(mensaje, 0);
 
     }
 

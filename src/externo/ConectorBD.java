@@ -64,7 +64,7 @@ public class ConectorBD {
 //                System.out.println(resultset.getInt(1));
 //            }
             while (resultset.next()) {
-                priceElement.setTextContent(String.valueOf(resultset.getInt(1)));
+                priceElement.setTextContent(String.valueOf(resultset.getString(1)));
             }
             rootElement.appendChild(priceElement);
             connection.close();

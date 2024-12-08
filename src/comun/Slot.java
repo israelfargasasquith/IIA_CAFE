@@ -20,12 +20,14 @@ public class Slot {
     }
 
     public void addMensaje(Mensaje msj) {
-        System.out.println("Añadido  mensaje con id = " + msj.getIdMsg() + " idDocument = " + msj.getIdDocument() + " idSegment = " + msj.getIdSegment() + " nSegments = " + msj.getnSegments());
+//System.out.println(" mensaje con id = " + msj.getIdMsg() + " idDocument = " + msj.getIdDocument() + " idSegment = " + msj.getIdSegment() + " nSegments = " + msj.getnSegments());
         colaMensajes.add(msj);
     }
 
     public Mensaje getMensaje() {
-        return colaMensajes.remove();
+        Mensaje tmp;
+        tmp = colaMensajes.remove();
+        return tmp;
     }
 
     public boolean isEmpty() {

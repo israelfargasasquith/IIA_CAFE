@@ -22,7 +22,6 @@ public class Correlator extends Tarea {
 
     public Correlator(EnumTarea t, ArrayList<Slot> se, ArrayList<Slot> sl, String et) {
         super(t, se, sl);
-
         this.nombreetiqueta = et;
     }
 
@@ -31,47 +30,41 @@ public class Correlator extends Tarea {
     }
 
     @Override
-    public void procesar() {// estructura del context enricher pero hay que modificar 
+    public void procesar() {
+        System.out.println("Correlator: Entrada 0 Vacia: " + this.isEmpty(0));
+        System.out.println("Correlator: Entrada 1 Vacia: " + this.isEmpty(1));
+        while (!this.isEmpty(0) && !this.isEmpty(1)) {
 
-        mensaje1 = this.getMensajeEntrada(0);  // Usamos mensaje como auxiliar para el primer mensaje
-        mensaje2 = this.getMensajeEntrada(1);  // Usamos mensaje como auxiliar para el segundo mensaje
+            mensaje1 = this.getMensajeEntrada(0);  // Usamos mensaje como auxiliar para el primer mensaje
+            mensaje2 = this.getMensajeEntrada(1);  // Usamos mensaje como auxiliar para el segundo mensaje
 
-        if (mensaje1 == null) {
-            System.out.println("Mensaje 1 es NULO");
+
+            System.out.println("Correlator Mensaje1: IDMsg -> " + mensaje1.getIdMsg() + "   IDDocument: " + mensaje1.getIdDocument());
+            System.out.println("mensaje1:" + mensaje1.toString());
+            System.out.println("Correlator Mensaje2: IDMsg -> " + mensaje2.getIdMsg() + "   IDDocument: " + mensaje2.getIdDocument());
+            System.out.println("mensaje2:" + mensaje2.toString());
+
+            if (mensaje1.getDocument() == null) {
+                System.out.println("Mensaje 1 es NULO");
+            }
+            if (mensaje2.getDocument() == null) {
+                System.out.println("Mensaje 2 es NULO");
+            }
+
+            // Declaramos las variables para las etiquetas order_id
+            String orderId1 = "" + mensaje1.getIdDocument();
+            String orderId2 = "" + mensaje2.getIdDocument();
+
+            // Comparamos los valores de order_id
+            if (!orderId1.equalsIgnoreCase("") && !orderId2.equalsIgnoreCase("") && orderId1.equals(orderId2)) {
+                // Si ambos order_id son iguales, enrutar los mensajes
+                this.setMensajeSalida(mensaje1, 0);  // Mensaje 1 por la salida 0
+                this.setMensajeSalida(mensaje2, 1);  // Mensaje 2 por la salida 1
+            } else {
+                // Si los order_id no son iguales, no hacer nada o manejar el error
+                System.out.println("Los order_id no coinciden. No se enrutan los mensajes.");
+            }
         }
-        if (mensaje2 == null) {
-            System.out.println("Mensaje 2 es NULO");
-        }
-
-        // Declaramos las variables para las etiquetas order_id
-        String orderId1 = "";
-        String orderId2 = "";
-
-        // Obtenemos la etiqueta order_id del primer mensaje
-        try {
-            Element typeElement = (Element) mensaje1.getDocument().getElementsByTagName(nombreetiqueta).item(0); // Obtenemos la etiqueta order_id
-            orderId1 = typeElement.getTextContent();
-        } catch (Exception ex) {
-            System.out.println("Error al obtener order_id del primer mensaje: " + ex.getMessage());
-        }
-        // Obtenemos la etiqueta order_id del segundo mensaje
-        try {
-            Element typeElement2 = (Element) mensaje2.getDocument().getElementsByTagName(nombreetiqueta).item(0); // Obtenemos la etiqueta order_id
-            orderId2 = typeElement2.getTextContent();
-        } catch (Exception ex) {
-            System.out.println("Error al obtener order_id del segundo mensaje: " + ex.getMessage());
-        }
-
-        // Comparamos los valores de order_id
-        if (!orderId1.equalsIgnoreCase("") && !orderId2.equalsIgnoreCase("") && orderId1.equals(orderId2)) {
-            // Si ambos order_id son iguales, enrutar los mensajes
-            this.setMensajeSalida(mensaje1, 0);  // Mensaje 1 por la salida 0
-            this.setMensajeSalida(mensaje2, 1);  // Mensaje 2 por la salida 1
-        } else {
-            // Si los order_id no son iguales, no hacer nada o manejar el error
-            System.out.println("Los order_id no coinciden. No se enrutan los mensajes.");
-        }
-
     }
 
 }

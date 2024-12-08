@@ -4,6 +4,7 @@
  */
 package proyecto_iia;
 
+import comun.Mensaje;
 import comun.Slot;
 import externo.ConectorBD;
 import externo.ConectorFicheroGenerador;
@@ -11,7 +12,9 @@ import externo.ConectorReceptor;
 import externo.PuertoEntrada;
 import externo.PuertoSalida;
 import externo.PuertoSolicitud;
+import java.io.IOException;
 import java.util.ArrayList;
+import org.xml.sax.SAXException;
 import proyecto_iia.tareas.Agregator;
 import proyecto_iia.tareas.Context_Enricher;
 import proyecto_iia.tareas.Correlator;
@@ -29,7 +32,7 @@ import proyecto_iia.tareas.Translator;
  */
 public class SimulacionCafe {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SAXException, IOException {
 
         /*
         ***************************************************************
@@ -65,8 +68,8 @@ public class SimulacionCafe {
         sSalidaReplicator1.add(slotSalidaReplicator1A);
         sSalidaReplicator1.add(slotSalidaReplicator1B);
         ArrayList<Slot> sSalidaReplicator2 = new ArrayList<>(); //Este arrayList son las salidas del replicator "inferior"
-        sSalidaReplicator2.add(slotSalidaReplicator2B);
         sSalidaReplicator2.add(slotSalidaReplicator2A);
+        sSalidaReplicator2.add(slotSalidaReplicator2B);
 
 //        Slot slotEntradaTraductor1 = new Slot();
         Slot slotSalidaTraductor1 = new Slot();
@@ -135,6 +138,7 @@ public class SimulacionCafe {
          */
         ConectorFicheroGenerador cGenerador = new ConectorFicheroGenerador(null);
         ConectorBD cSolicitud1 = new ConectorBD();
+        ConectorBD cSolicitud2 = new ConectorBD();
         ConectorReceptor cReceptor = new ConectorReceptor();
 
         /*
@@ -164,16 +168,17 @@ public class SimulacionCafe {
         Correlator correlator2 = (Correlator) tareaFactory.Factory_Method(EnumTarea.CORRELATOR, sEntradaCorrelator2, sSalidaCorrelator2);
         Context_Enricher context_Enricher1 = (Context_Enricher) tareaFactory.Factory_Method(EnumTarea.CONTEXT_ENRICHER, sSalidaCorrelator1, sSalidaContentEnricher1);
         Context_Enricher context_Enricher2 = (Context_Enricher) tareaFactory.Factory_Method(EnumTarea.CONTEXT_ENRICHER, sSalidaCorrelator2, sSalidaContentEnricher2);
-        Merger merger = (Merger) tareaFactory.Factory_Method(EnumTarea.MERGER,sEntradaMerger, sSalidaMerger);
+        Merger merger = (Merger) tareaFactory.Factory_Method(EnumTarea.MERGER, sEntradaMerger, sSalidaMerger);
         Agregator agregator = (Agregator) tareaFactory.Factory_Method(EnumTarea.AGREGATOR, sSalidaMerger, sSalidaAgregator);
 
         /*
         ***************************************************************
-        ************ ASIGNACION DE CONECTORES**************
+        ************ ASIGNACION DE CONECTORES************** 
         ***************************************************************
          */
         cGenerador.setPuertoEntrada(pEntrada);
         cSolicitud1.setPuertoSolicitud(pSolicitud1);
+        cSolicitud2.setPuertoSolicitud(pSolicitud2);
 
         /*
         ***************************************************************
@@ -187,7 +192,7 @@ public class SimulacionCafe {
         pSolicitud1.setsEntrada(slotSalidaTraductor1);
         pSolicitud1.setsSalida(slotEntradaCorrelator1B);
 
-        pSolicitud2.setcBD(cSolicitud1);
+        pSolicitud2.setcBD(cSolicitud2);
         pSolicitud2.setsEntrada(slotSalidaTraductor2);
         pSolicitud2.setsSalida(slotEntradaCorrelator2B);
 
@@ -237,23 +242,35 @@ public class SimulacionCafe {
          */
         cGenerador.generarEntrada();
         //puertoEntrada es llamado por el generador
+        System.out.println("\n\nSplitter");
         splitter.procesar();
+        System.out.println("\n\nDistributor");
         distributor.procesar();
+        System.out.println("\n\nReplicator1");
         replicator1.procesar();
+        System.out.println("\n\nRepiclator2");
         replicator2.procesar();
+        System.out.println("\n\nTranslator1");
         translator1.procesar();
+        System.out.println("\n\ntranslator2");
         translator2.procesar();
+        System.out.println("\n\nPuertoSolicitud1");
         pSolicitud1.leerSolicitud();
+        System.out.println("\n\nPuertoSolicitud2");
         pSolicitud2.leerSolicitud();
         //El conector de BD escribe en el puerto de forma automatica despues de la consulta
         correlator1.procesar();
         correlator2.procesar();
+        System.out.println("\n\nEnricher1");
         context_Enricher1.procesar();
+        System.out.println("\n\nEnricher2");
+
         context_Enricher2.procesar();
         merger.procesar();
         agregator.procesar();
         pSalida.generarSalida();
         //El mismo puerto de salida es el que llama al conector receptor
+
     }
 
 }

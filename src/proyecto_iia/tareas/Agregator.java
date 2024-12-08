@@ -108,12 +108,12 @@ public class Agregator extends Tarea { //XD
         ArrayList<Mensaje> lMensajesEntrada = new ArrayList<>();
         while (!this.input.isEmpty()) {
             Mensaje msj = input.getMensaje();
-            System.out.println("Añadido  mensaje al arrayList con id = " + msj.getIdMsg() + " idDocument = " + msj.getIdDocument() + " idSegment = " + msj.getIdSegment() + " nSegments = " + msj.getnSegments());
+            System.out.println("Agregator: Añadido  mensaje al arrayList con id = " + msj.getIdMsg() + " idDocument = " + msj.getIdDocument() + " idSegment = " + msj.getIdSegment() + " nSegments = " + msj.getnSegments());
             lMensajesEntrada.add(msj);
         }
 
         Mensaje tmp = lMensajesEntrada.getFirst();
-        System.out.println("El mensaje " + tmp.getIdDocument() + " espera " + (tmp.getnSegments() + 1) + " nSegmentos");
+        System.out.println("El mensaje " + tmp.getIdDocument() + " espera " + tmp.getnSegments() + " nSegmentos");
 
         Document docUnido = dBuilder.newDocument();
         Element rootElement = docUnido.createElement(rootTag);
@@ -131,7 +131,7 @@ public class Agregator extends Tarea { //XD
         for (Mensaje mensaje : lMensajesEntrada) {
             Element groupItem = docUnido.createElement(groupItemTag);
             group.appendChild(groupItem);
-            System.out.println("Se va a procesar el mensaje " + mensaje.getIdSegment() + " de los " + (mensaje.getnSegments() + 1) + " segmentos");
+            System.out.println("Se va a procesar el mensaje " + mensaje.getIdSegment() + " de los " + mensaje.getnSegments() + " segmentos");
             NodeList listaInfo1 = null;
             try {
                 listaInfo1 = (NodeList) xpath.compile(xPathQueryInfo1).evaluate(mensaje.getDocument(), XPathConstants.NODESET);
@@ -172,6 +172,7 @@ public class Agregator extends Tarea { //XD
         }
 
         Mensaje unido = new Mensaje(docUnido, tmp.getIdDocument());
+        System.out.println("Agregator: Mensaje unido = " + unido.getIdMsg() + " idDocument = " + unido.getIdDocument());
 
         output.addMensaje(unido);
     }
