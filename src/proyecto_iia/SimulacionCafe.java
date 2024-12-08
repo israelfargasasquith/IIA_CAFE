@@ -50,6 +50,11 @@ public class SimulacionCafe {
         sSalidaDistributor.add(slotSalidaDistributor1);
         sSalidaDistributor.add(slotSalidaDistributor2);
 
+        ArrayList<Slot> sEntradaReplicator1 = new ArrayList<>();
+        ArrayList<Slot> sEntradaReplicator2 = new ArrayList<>();
+        sEntradaReplicator1.add(slotSalidaDistributor1);
+        sEntradaReplicator2.add(slotSalidaDistributor2);
+
 //       Slot slotEntradaReplicator1 = new Slot(); Las de arriba
 //       Slot slotEntradaReplicator2 = new Slot();
         Slot slotSalidaReplicator1A = new Slot(); //Slot del camino "superior" que vuelve a bifurcar en dos caminos A para el traductor y B para el correlator
@@ -79,6 +84,8 @@ public class SimulacionCafe {
         Slot slotSalidaCorrelator1B = new Slot();
         ArrayList<Slot> sEntradaCorrelator1 = new ArrayList<>();
         sEntradaCorrelator1.add(slotEntradaCorrelator1B);
+        sEntradaCorrelator1.add(slotSalidaReplicator1B);
+
         ArrayList<Slot> sSalidaCorrelator1 = new ArrayList<>();
         sSalidaCorrelator1.add(slotSalidaCorrelator1A);
         sSalidaCorrelator1.add(slotSalidaCorrelator1B);
@@ -87,11 +94,13 @@ public class SimulacionCafe {
         Slot slotEntradaCorrelator2B = new Slot(); //respuesta puerto solicitud
         Slot slotSalidaCorrelator2A = new Slot();
         Slot slotSalidaCorrelator2B = new Slot();
-        ArrayList<Slot> sEntradaCorrelator2 = new ArrayList<>();
-        sEntradaCorrelator2.add(slotEntradaCorrelator2B);
         ArrayList<Slot> sSalidaCorrelator2 = new ArrayList<>();
         sSalidaCorrelator2.add(slotSalidaCorrelator2A);
         sSalidaCorrelator2.add(slotSalidaCorrelator2B);
+
+        ArrayList<Slot> sEntradaCorrelator2 = new ArrayList<>();
+        sEntradaCorrelator2.add(slotEntradaCorrelator2B);
+        sEntradaCorrelator2.add(slotSalidaReplicator2B);
 
 //        Slot slotEntradaContentEnricher1A = new Slot();
 //        Slot slotEntradaContentEnricher1B = new Slot();
@@ -109,6 +118,10 @@ public class SimulacionCafe {
         Slot slotSalidaMerger = new Slot();
         ArrayList<Slot> sSalidaMerger = new ArrayList<>();
         sSalidaMerger.add(slotSalidaMerger);
+
+        ArrayList<Slot> sEntradaMerger = new ArrayList<>();
+        sEntradaMerger.add(slotSalidaContentEnricher1);
+        sEntradaMerger.add(slotSalidaContentEnricher2);
 
 //        Slot slotEntradaAgregator = new Slot();
         Slot slotSalidaAgregator = new Slot();
@@ -143,15 +156,15 @@ public class SimulacionCafe {
 
         Splitter splitter = (Splitter) tareaFactory.Factory_Method(EnumTarea.SPLITTER, sEntradaSplitter, sSalidaSplitter);
         Distributor distributor = (Distributor) tareaFactory.Factory_Method(EnumTarea.DISTRIBUTOR, sSalidaSplitter, sSalidaDistributor);
-        Replicator replicator1 = (Replicator) tareaFactory.Factory_Method(EnumTarea.REPLICATOR, sSalidaDistributor, sSalidaReplicator1); //PROBLEMA CUANDO LEAN DEL MISMO ARRAY
-        Replicator replicator2 = (Replicator) tareaFactory.Factory_Method(EnumTarea.REPLICATOR, sSalidaDistributor, sSalidaReplicator2);//PROBLEMA CUANDO LEAN DEL MISMO
+        Replicator replicator1 = (Replicator) tareaFactory.Factory_Method(EnumTarea.REPLICATOR, sEntradaReplicator1, sSalidaReplicator1);
+        Replicator replicator2 = (Replicator) tareaFactory.Factory_Method(EnumTarea.REPLICATOR, sEntradaReplicator2, sSalidaReplicator2);
         Translator translator1 = (Translator) tareaFactory.Factory_Method(EnumTarea.TRANSLATOR, sSalidaReplicator1, sSalidaTraductor1);
         Translator translator2 = (Translator) tareaFactory.Factory_Method(EnumTarea.TRANSLATOR, sSalidaReplicator2, sSalidaTraductor2);
-        Correlator correlator1 = (Correlator) tareaFactory.Factory_Method(EnumTarea.CORRELATOR, sSalidaReplicator1, sSalidaCorrelator1); //PROBLEMA COMO ASIGNAR LOS SLOTS 
-        Correlator correlator2 = (Correlator) tareaFactory.Factory_Method(EnumTarea.CORRELATOR, sSalidaReplicator2, sSalidaCorrelator2); //El problema es que hay que añadir entonces el slot del puerto solicitud que es el sEntradaCorrelator1 y 2 segun corresponda. La solucion puede hacerse de varias formas, hablar para ver que hacemos
+        Correlator correlator1 = (Correlator) tareaFactory.Factory_Method(EnumTarea.CORRELATOR, sEntradaCorrelator1, sSalidaCorrelator1);
+        Correlator correlator2 = (Correlator) tareaFactory.Factory_Method(EnumTarea.CORRELATOR, sEntradaCorrelator2, sSalidaCorrelator2);
         Context_Enricher context_Enricher1 = (Context_Enricher) tareaFactory.Factory_Method(EnumTarea.CONTEXT_ENRICHER, sSalidaCorrelator1, sSalidaContentEnricher1);
         Context_Enricher context_Enricher2 = (Context_Enricher) tareaFactory.Factory_Method(EnumTarea.CONTEXT_ENRICHER, sSalidaCorrelator2, sSalidaContentEnricher2);
-        Merger merger = (Merger) tareaFactory.Factory_Method(EnumTarea.MERGER, sSalidaContentEnricher1, sSalidaMerger); //PROBLEMA ASIGNACION DE SLOTS, se asigna un solo array y este debe contener tambien el slot del otro camino
+        Merger merger = (Merger) tareaFactory.Factory_Method(EnumTarea.MERGER,sEntradaMerger, sSalidaMerger);
         Agregator agregator = (Agregator) tareaFactory.Factory_Method(EnumTarea.AGREGATOR, sSalidaMerger, sSalidaAgregator);
 
         /*
@@ -194,6 +207,8 @@ public class SimulacionCafe {
         String[] condiciones = {"cold", "hot"};
         distributor.setAtributos(condiciones, 2, "//type");
 
+//        replicator1.setEntradaAProcesar(0); //Esto es otra solucion que he pensado si no funcina la de la asignacion de los slots
+//        replicator2.setEntradaAProcesar(1);
         correlator1.setEtiqueta("order_id");
         correlator2.setEtiqueta("order_id");
 

@@ -15,20 +15,38 @@ import org.w3c.dom.Document;
  */
 public class Replicator extends Tarea {
 
-   private Mensaje mensaje;
+    private Mensaje mensaje;
+    //  private int nEntradaAprocesar;
 
-    public Replicator(EnumTarea t, ArrayList<Slot> se, ArrayList<Slot> sl ) {
+    public Replicator(EnumTarea t, ArrayList<Slot> se, ArrayList<Slot> sl) {
         super(t, se, sl);
+        //    nEntradaAprocesar = 0;
     }
 
     @Override
     public void procesar() {
-
-        mensaje = this.getMensajeEntrada(0);   //Solo tiene 1 entrada
-        //Lo coloca en las salidas
-        for (int i = 0; i < this.getNSalidas(); i++) {
-            this.setMensajeSalida(mensaje, i);
+        while (!this.isEmpty(0)) {
+            mensaje = this.getMensajeEntrada(0);   //Solo tiene 1 entrada
+            //Lo coloca en las salidas
+            for (int i = 0; i < this.getNSalidas(); i++) {
+                this.setMensajeSalida(mensaje, i);
+            }
         }
     }
-
 }
+
+//    public void setEntradaAProcesar(int nEntrada) {
+//        this.nEntradaAprocesar = nEntrada;
+//    }
+//    @Override
+//    public void procesar() {
+//
+//        while (!this.isEmpty(nEntradaAprocesar)) {
+//            mensaje = this.getMensajeEntrada(nEntradaAprocesar);   //Solo tiene 1 entrada
+//            //Lo coloca en las salidas
+//            for (int i = 0; i < this.getNSalidas(); i++) {
+//                this.setMensajeSalida(mensaje, i);
+//            }
+//        }
+//    }
+
